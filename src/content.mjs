@@ -66,10 +66,10 @@ const hero = `<section class="hero hero--mine">
   <div class="wrap">
     <div class="hero__grid">
       <div class="hero__copy">
-        <p class="eyebrow">$Q mining</p>
+        <p class="eyebrow">$Q mining &middot; Proof of Contribution</p>
         <h1 class="d1">Mined by<br><strong>staying online</strong></h1>
         <p class="hero__sub">A fair chance at $Q<br>every 10 minutes</p>
-        <p class="hero__note">Every licensed phone that keeps the QuFi node network running gets one ticket in a public draw. No mining rigs and no wasted power, and nobody, QuFi included, can predict or change the result.</p>
+        <p class="hero__note">$Q is mined by Proof of Contribution. Every licensed phone that keeps the QuFi node network running gets one ticket in a public draw. No mining rigs and no wasted power, and nobody, QuFi included, can predict or change the result.</p>
         <div class="hero__cta">
           <a class="btn btn--solid" href="#how">How it works ${icon('next')}</a>
         </div>
@@ -227,10 +227,36 @@ export const mining = {
   metaTitle: '$Q Mining · QuFi Network',
   title: 'Mined by **staying online**',
   section: 'Mining',
-  description: 'Every licensed phone that keeps the QuFi node network running gets one fair chance every 10 minutes to mine 1 $Q, from a public draw nobody can predict or change.',
+  description: '$Q is mined by Proof of Contribution. Every licensed phone that keeps the QuFi node network running gets one fair chance every 10 minutes to mine 1 $Q, from a public draw nobody can predict or change.',
   navActive: 'network.html',
   custom: hero,
   sections: [
+    {
+      id: 'model', nav: 'Proof of Contribution',
+      blocks: [
+        { type: 'head', eyebrow: 'The model', title: 'Proof of **Contribution**',
+          lede: 'Proof of work rewards computing power. Proof of stake rewards money locked up. Proof of Contribution rewards what the QuFi network actually runs on: phones that stay online and do their signing work, each one proven by a key inside the phone.' },
+        {
+          type: 'features', cards: true, cols: 3,
+          items: [
+            { icon: 'mobile', title: 'The contribution is the work', text: 'Staying reachable and answering signing rounds is what keeps Palm vaults working. Nothing is burned to earn a ticket.' },
+            { icon: 'fingerprint', title: 'Every contribution is proven', text: 'Each heartbeat is signed by a key in the phone\'s security chip and carries the latest public random number, so it cannot be made in advance or copied to another device.' },
+            { icon: 'scale', title: 'Spread wide, not bought', text: 'One ticket for being online, at most one more for doing the work, and a cap on phones per person. More money or more servers buy no extra chances.' },
+          ],
+        },
+        {
+          type: 'table', label: 'Three ways to reward a network',
+          head: ['', 'Proof of work', 'Proof of stake', 'Proof of Contribution'],
+          rows: [
+            ['What earns a reward', 'Computing power', 'Coins locked up', 'Uptime and signing work'],
+            ['What it takes to join', 'Mining rigs and electricity', 'Capital at risk', 'A licensed phone that stays online'],
+            ['Who earns the most', 'The biggest hardware', 'The largest holders', 'Nobody can buy more: two tickets per phone at most, capped per person'],
+            ['How winners are picked', 'First to solve a puzzle', 'Chosen by stake', 'A public random draw nobody controls'],
+            ['What it decides', 'Who adds the next block', 'Who adds the next block', 'Who mints new $Q. Payments still settle on the chains they use today'],
+          ],
+        },
+      ],
+    },
     {
       id: 'how', nav: 'How it works',
       blocks: [
@@ -288,10 +314,10 @@ export const mining = {
       ],
     },
     {
-      id: 'work', nav: 'Proof of contribution',
+      id: 'work', nav: 'Two tickets',
       blocks: [
-        { type: 'head', eyebrow: 'Proof of contribution', title: 'Doing the work earns a **second ticket**',
-          lede: 'Uptime earns a phone its ticket. A phone that answers 95% or more of the signing work it is asked for over 7 days gets one extra ticket each round. Never more than two.' },
+        { type: 'head', eyebrow: 'Two kinds of contribution', title: 'Doing the work earns a **second ticket**',
+          lede: 'Proof of Contribution counts two things. Uptime earns a phone its first ticket. A phone that answers 95% or more of the signing work it is asked for over 7 days gets one extra ticket each round. Never more than two.' },
         {
           type: 'cards', cols: 2,
           items: [
