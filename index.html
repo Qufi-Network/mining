@@ -1,447 +1,849 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>$Q Uptime Mining</title>
-<meta name="description" content="How QuFi nodes mine $Q by staying online: a fair public draw every 10 minutes, who can win, and a supply schedule built like Bitcoin's.">
-<meta property="og:title" content="$Q Uptime Mining">
-<meta property="og:description" content="QuFi nodes mine $Q by staying online: a fair public draw every 10 minutes and a supply built like Bitcoin's.">
-<meta property="og:image" content="/qicon.png">
-<meta name="theme-color" content="#071A4D">
-<link rel="icon" type="image/png" href="/qicon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>$Q Mining · QuFi Network</title>
+<meta name="description" content="Every licensed phone that keeps the QuFi node network running gets one fair chance every 10 minutes to mine 1 $Q, from a public draw nobody can predict or change.">
+<meta name="theme-color" content="#1557FF">
+<link rel="icon" href="assets/favicon.png" type="image/png">
+<script>/* Decide before first paint whether a GL scene will run, so the still
+  behind it is never shown for a frame and then hidden. Deferred scripts run
+  late enough to flash; this cannot. If WebGL is missing or motion is reduced
+  the class is absent and the still shows normally, with no reliance on any
+  animation frame ever arriving.
+
+  The class is has-gl, NOT gl. The bare .gl class is the WebGL host element
+  class and carries pointer-events: none; pointer-events inherits, so putting
+  it on the html element made every link and button on the site unclickable. */
+(function(){try{var c=document.createElement('canvas');
+if((c.getContext('webgl')||c.getContext('experimental-webgl'))&&
+!(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches))
+document.documentElement.className+=' has-gl';}catch(e){}})();</script>
+<meta property="og:title" content="Mined by staying online · QuFi Network">
+<meta property="og:description" content="Every licensed phone that keeps the QuFi node network running gets one fair chance every 10 minutes to mine 1 $Q, from a public draw nobody can predict or change.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://qufi-mining.vercel.app/assets/img/qicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
-<style>
-* { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; color-scheme: light; }
-body { margin: 0; }
-img { max-width: 100%; }
-[hidden] { display: none !important; }
-/* Layout: a deep navy brand band with the Q in orbit, then one calm reading column of short sections. QuFi brand kit: Inter only, QuFi Blue, Deep Navy. */
-:root {
-  --bg: #F8FAFC;
-  --surface: #FFFFFF;
-  --ink: #071018;
-  --muted: #4B5876;
-  --soft: #EAF1FF;
-  --line: #DCE3F1;
-  --line-strong: #A9B6D3;
-  --accent: #1557FF;
-  --accent-text: #1557FF;
-  --chart: #1557FF;
-  --chart-fill: rgba(21, 87, 255, 0.10);
-  --hero-bg: #071A4D;
-  --hero-ink: #FFFFFF;
-  --hero-muted: #B9C7EC;
-  --hero-line: rgba(255, 255, 255, 0.16);
-  --good: #127A4A;
-  --bad: #B42318;
-  --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  --radius: 14px;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #06143D; --surface: #0B2463; --ink: #F8FAFC; --muted: #A8B7DE; --soft: #10307A;
-    --line: #1E3A82; --line-strong: #4C64A6; --accent: #5A82FF; --accent-text: #9BB3FF;
-    --chart: #5A82FF; --chart-fill: rgba(90, 130, 255, 0.18); --hero-bg: #040E2C;
-    --hero-ink: #FFFFFF; --hero-muted: #B9C7EC; --hero-line: rgba(255, 255, 255, 0.14);
-    --good: #4ADE9A; --bad: #FF9A90; color-scheme: dark;
-  }
-}
-:root[data-theme="dark"] {
-  --bg: #06143D; --surface: #0B2463; --ink: #F8FAFC; --muted: #A8B7DE; --soft: #10307A;
-  --line: #1E3A82; --line-strong: #4C64A6; --accent: #5A82FF; --accent-text: #9BB3FF;
-  --chart: #5A82FF; --chart-fill: rgba(90, 130, 255, 0.18); --hero-bg: #040E2C;
-  --hero-ink: #FFFFFF; --hero-muted: #B9C7EC; --hero-line: rgba(255, 255, 255, 0.14);
-  --good: #4ADE9A; --bad: #FF9A90; color-scheme: dark;
-}
-body { background: var(--bg); color: var(--ink); font-family: var(--font); font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
-.wrap { max-width: 920px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
-h1, h2, h3 { text-wrap: balance; margin: 0; }
-p { margin: 0; }
-a { color: var(--accent-text); }
-a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
-
-/* Brand band */
-.hero { background: var(--hero-bg); color: var(--hero-ink); }
-.hero .wrap { padding-block: 28px 44px; display: grid; gap: 36px; }
-.topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
-.topbar img { height: 22px; width: auto; display: block; }
-.tag { font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--hero-muted); border: 1px solid var(--hero-line); border-radius: 999px; padding: 4px 12px; }
-.hero-grid { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: 32px; align-items: center; }
-.eyebrow { font-size: 13px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--hero-muted); margin-bottom: 14px; }
-.hero h1 { font-size: clamp(36px, 6vw, 56px); line-height: 1.05; font-weight: 700; letter-spacing: -0.02em; }
-.hero h1 em { font-style: normal; color: #5A82FF; }
-.lead { margin-top: 18px; font-size: 18px; line-height: 1.6; color: var(--hero-muted); max-width: 34em; }
-.orbit { position: relative; width: min(100%, 300px); aspect-ratio: 1; justify-self: center; max-width: 100%; }
-.orbit .glow { position: absolute; inset: 14%; border-radius: 50%; background: radial-gradient(circle, rgba(21, 87, 255, 0.55), rgba(21, 87, 255, 0) 70%); }
-.orbit .qicon { position: absolute; inset: 20%; width: 60%; height: 60%; object-fit: contain; }
-.orbit .ring { position: absolute; inset: 2%; border-radius: 50%; border: 1px solid var(--hero-line); }
-.orbit .ring span { position: absolute; width: 14px; height: 14px; margin: -7px; border-radius: 50%; background: #EAF1FF; box-shadow: 0 0 0 4px rgba(21, 87, 255, 0.55); left: 50%; top: 0; transform-origin: 7px calc(min(300px, 100%) * 0.48); }
-.orbit .ring span:nth-child(1) { left: 50%; top: 0; }
-.orbit .ring span:nth-child(2) { left: 93.3%; top: 75%; }
-.orbit .ring span:nth-child(3) { left: 6.7%; top: 75%; }
-@media (prefers-reduced-motion: no-preference) {
-  .orbit .ring { animation: spin 24s linear infinite; }
-  .orbit .glow { animation: breathe 5s ease-in-out infinite; }
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-@keyframes breathe { 50% { opacity: 0.65; transform: scale(1.05); } }
-.facts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; margin: 0; border-top: 1px solid var(--hero-line); }
-.facts div { padding: 18px 16px 0 0; }
-.facts dt { font-size: clamp(22px, 3.4vw, 30px); font-weight: 700; letter-spacing: -0.01em; font-variant-numeric: tabular-nums; }
-.facts dd { margin: 4px 0 0; font-size: 14px; color: var(--hero-muted); }
-
-/* Sections */
-main .wrap { padding-block: 56px 72px; display: grid; gap: 72px; }
-section { display: grid; gap: 20px; min-width: 0; }
-.kicker { font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent-text); }
-h2 { font-size: clamp(26px, 3.6vw, 34px); line-height: 1.15; font-weight: 700; letter-spacing: -0.015em; }
-h2 em { font-style: normal; color: var(--accent-text); }
-.intro { font-size: 17px; color: var(--muted); max-width: 40em; }
-h3 { font-size: 17px; font-weight: 600; line-height: 1.3; }
-.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
-
-.steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; counter-reset: step; }
-.steps li { padding: 22px 20px; display: grid; gap: 10px; align-content: start; counter-increment: step; }
-.steps li::before { content: counter(step); width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; font-size: 14px; background: var(--soft); color: var(--accent-text); }
-.steps p { color: var(--muted); font-size: 15px; }
-
-.diagram { padding: 18px; overflow-x: auto; }
-.diagram svg { display: block; width: 100%; min-width: 640px; height: auto; }
-.d-box { fill: none; stroke: var(--line-strong); stroke-width: 1.25; }
-.d-win { fill: var(--soft); stroke: var(--accent); stroke-width: 2; }
-.d-line { fill: none; stroke: var(--line-strong); stroke-width: 1.25; }
-.d-name { fill: var(--ink); font-weight: 600; font-size: 13px; }
-.d-sub { fill: var(--muted); font-size: 11.5px; }
-.d-title { fill: var(--ink); font-weight: 600; font-size: 15px; }
-.d-arrow { fill: var(--line-strong); }
-.caption { font-size: 14px; color: var(--muted); }
-
-.checks { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
-.check { padding: 20px; display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 4px 12px; align-items: start; }
-.check svg { width: 28px; height: 28px; grid-row: span 2; }
-.check p { color: var(--muted); font-size: 15px; grid-column: 2; }
-.tick-bg { fill: var(--soft); }
-.tick { fill: none; stroke: var(--accent); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
-
-.analogy { padding: 22px 24px; background: var(--soft); border-radius: var(--radius); font-size: 18px; line-height: 1.55; }
-.analogy strong { color: var(--accent-text); }
-.pair { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
-.pair .card { padding: 20px; display: grid; gap: 8px; align-content: start; }
-.pair p { color: var(--muted); font-size: 15px; }
-
-.split { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
-.split .card { padding: 22px; display: grid; gap: 12px; align-content: start; }
-.split ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
-.split li { display: grid; grid-template-columns: 18px minmax(0, 1fr); gap: 10px; font-size: 15px; }
-.split li::before { content: ""; width: 10px; height: 10px; border-radius: 50%; margin-top: 7px; }
-.yes li::before { background: var(--good); }
-.no li::before { background: var(--bad); }
-.label { font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; }
-.yes .label { color: var(--good); }
-.no .label { color: var(--bad); }
-
-.chart-card { padding: 20px 20px 12px; display: grid; gap: 6px; }
-.chart-wrap { position: relative; }
-.chart-wrap svg { display: block; width: 100%; height: auto; touch-action: pan-y; }
-.axis-text { fill: var(--muted); font-size: 12px; font-variant-numeric: tabular-nums; }
-.grid-line { stroke: var(--line); stroke-width: 1; }
-.halving { stroke: var(--line-strong); stroke-width: 1; stroke-dasharray: 3 4; }
-.area { fill: var(--chart-fill); }
-.curve { fill: none; stroke: var(--chart); stroke-width: 2; stroke-linejoin: round; }
-.point { fill: var(--chart); stroke: var(--surface); stroke-width: 2; }
-.note { fill: var(--ink); font-size: 12.5px; font-weight: 600; }
-.cross { stroke: var(--line-strong); stroke-width: 1; }
-.tip { position: absolute; pointer-events: none; background: var(--surface); color: var(--ink); border: 1px solid var(--line-strong); border-radius: 10px; padding: 8px 10px; font-size: 13px; line-height: 1.45; box-shadow: 0 6px 20px rgba(7, 16, 24, 0.14); white-space: nowrap; font-variant-numeric: tabular-nums; }
-.tip strong { display: block; }
-.table-wrap { overflow-x: auto; }
-table { width: 100%; border-collapse: collapse; font-size: 15px; font-variant-numeric: tabular-nums; }
-th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); white-space: nowrap; }
-th { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
-td.num, th.num { text-align: right; }
-tr.first td { font-weight: 600; }
-.callout { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 14px; align-items: center; padding: 16px 20px; }
-.callout .big { font-size: 28px; font-weight: 700; color: var(--accent-text); font-variant-numeric: tabular-nums; }
-.callout p { color: var(--muted); font-size: 15px; }
-
-.threats { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; }
-.threats .card { padding: 18px 20px; display: grid; gap: 6px; align-content: start; }
-.threats .try { font-size: 13px; color: var(--muted); }
-.threats h3 { font-size: 16px; }
-.threats p { font-size: 15px; color: var(--muted); }
-
-.road { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
-.road li { display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 16px; padding-bottom: 22px; position: relative; }
-.road li::before { content: attr(data-n); width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; background: var(--surface); border: 1.5px solid var(--accent); color: var(--accent-text); position: relative; z-index: 1; }
-.road li:not(:last-child)::after { content: ""; position: absolute; left: 19.5px; top: 40px; bottom: 0; width: 1.5px; background: var(--line-strong); }
-.road h3 { margin-top: 8px; }
-.road p { color: var(--muted); font-size: 15px; margin-top: 2px; }
-.road .now::before { background: var(--accent); color: #FFFFFF; }
-
-footer { border-top: 1px solid var(--line); }
-footer .wrap { padding-block: 28px 40px; display: grid; gap: 14px; }
-.foot-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
-.foot-logo { display: flex; align-items: center; gap: 12px; }
-.foot-logo img.q { width: 36px; height: 36px; }
-.foot-logo img.wm { height: 16px; width: auto; }
-.wm-dark { display: none; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .wm-light { display: none; } :root:not([data-theme="light"]) .wm-dark { display: inline; } }
-:root[data-theme="dark"] .wm-light { display: none; }
-:root[data-theme="dark"] .wm-dark { display: inline; }
-footer p { font-size: 14px; color: var(--muted); max-width: 46em; }
-
-@media (max-width: 720px) {
-  .hero-grid { grid-template-columns: minmax(0, 1fr); }
-  .orbit { width: min(70%, 240px); order: -1; }
-  .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  main .wrap { gap: 56px; }
-}
-</style>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/qufi.css">
+<link rel="stylesheet" href="assets/css/mining.css">
 </head>
 <body>
-
-<header class="hero">
-  <div class="wrap">
-    <div class="topbar">
-      <img src="qufi-wordmark-white.png" alt="QuFi" width="546" height="96">
-      <span class="tag">Planned design</span>
-    </div>
-    <div class="hero-grid">
-      <div>
-        <p class="eyebrow">$Q mining</p>
-        <h1>Mined by staying <em>online</em></h1>
-        <p class="lead">Every licensed phone that keeps the QuFi node network running gets one fair chance every 10 minutes to mine 1 $Q. No mining rigs and no wasted power: a public draw that nobody, QuFi included, can predict or change.</p>
-      </div>
-      <div class="orbit" aria-hidden="true">
-        <div class="glow"></div>
-        <img class="qicon" src="qicon.png" alt="" width="320" height="320">
-        <div class="ring"><span></span><span></span><span></span></div>
-      </div>
-    </div>
-    <dl class="facts">
-      <div><dt>50,000,000</dt><dd>$Q ever, a fixed cap</dd></div>
-      <div><dt>10 minutes</dt><dd>per round, like a Bitcoin block</dd></div>
-      <div><dt>4 years</dt><dd>between halvings</dd></div>
-      <div><dt>1,000</dt><dd>nodes online before mining starts</dd></div>
-    </dl>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head">
+  <div class="wrap site-head__in">
+    <a class="brand" href="https://qufi.network/" aria-label="QuFi Network home">
+      
+      <img class="brand__logo" src="assets/img/qufi-logo.png"
+           alt="QuFi Network" width="105" height="44">
+      <span class="brand__sub">Quantum<br>Verification<br>Network</span>
+    </a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav" aria-label="Menu">
+      <span class="nav-toggle__bars"><i></i><i></i><i></i></span>
+    </button>
+    <nav class="nav" id="nav">
+      <a href="https://qufi.network/protocol.html">Protocol</a>
+      <a href="https://qufi.network/technology.html">Technology</a>
+      <a href="https://qufi.network/network.html" aria-current="page">Network</a>
+      <a href="https://qufi.network/applications.html">Applications</a>
+      <a href="https://qufi.network/developers.html">Developers</a>
+      <a class="btn btn--solid" href="https://qufi.network/assets/QuFi-Technical-Paper-v1.pdf" download="QuFi-Technical-Paper-v1.pdf"
+         type="application/pdf" aria-label="Download the QuFi technical paper (PDF, 12 MB)">Technical paper <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M6.5 3.75h7l4.5 4.5v11.5a.5.5 0 0 1-.5.5H6.5a.5.5 0 0 1-.5-.5V4.25a.5.5 0 0 1 .5-.5Z" pathLength="1" data-pl="1"/><path d="M13.25 4v4.5H18" pathLength="1" data-pl="1"/><path d="M8.75 12.5h6.5M8.75 15.5h6.5" pathLength="1" data-pl="1"/><g class="qf-field"><path class="qf-link" d="M23.4 -1.8 L27 2.6 L28.8 8" stroke-width=".85" opacity=".38" pathLength="1"/><circle cx="27" cy="2.6" r="1.6" fill="currentColor" stroke="none" class="qf-node" opacity=".9"/><circle cx="23.4" cy="-1.8" r="0.85" fill="currentColor" stroke="none" class="qf-dot" opacity=".45"/><circle cx="28.8" cy="8" r="0.85" fill="currentColor" stroke="none" class="qf-dot" opacity=".45"/></g></svg></a>
+    </nav>
   </div>
+  <div class="scroll-progress" aria-hidden="true"><i></i></div>
 </header>
-
-<main>
+<main id="main">
+  <section class="hero hero--mine">
   <div class="wrap">
+    <div class="hero__grid">
+      <div class="hero__copy">
+        <p class="eyebrow">$Q mining</p>
+        <h1 class="d1">Mined by<br><strong>staying online</strong></h1>
+        <p class="hero__sub">A fair chance at $Q<br>every 10 minutes</p>
+        <p class="hero__note">Every licensed phone that keeps the QuFi node network running gets one ticket in a public draw. No mining rigs and no wasted power, and nobody, QuFi included, can predict or change the result.</p>
+        <div class="hero__cta">
+          <a class="btn btn--solid" href="#how">How it works <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M4.6 12h14.8" pathLength="1" data-pl="1"/><path d="m14.2 6.8 5.2 5.2-5.2 5.2" pathLength="1" data-pl="1"/><g class="qf-field"><path class="qf-link" d="M1.6 25.2 L-3.2 19.4 L-4.2 13.6" stroke-width=".85" opacity=".38" pathLength="1"/><circle cx="-3.2" cy="19.4" r="1.6" fill="currentColor" stroke="none" class="qf-node" opacity=".9"/><circle cx="1.6" cy="25.2" r="0.85" fill="currentColor" stroke="none" class="qf-dot" opacity=".45"/><circle cx="-4.2" cy="13.6" r="0.85" fill="currentColor" stroke="none" class="qf-dot" opacity=".45"/></g></svg></a>
+          <a class="btn btn--ghost" href="https://qufi.network/whitepaper.html">Technical paper <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M6.5 3.75h7l4.5 4.5v11.5a.5.5 0 0 1-.5.5H6.5a.5.5 0 0 1-.5-.5V4.25a.5.5 0 0 1 .5-.5Z" pathLength="1" data-pl="1"/><path d="M13.25 4v4.5H18" pathLength="1" data-pl="1"/><path d="M8.75 12.5h6.5M8.75 15.5h6.5" pathLength="1" data-pl="1"/><g class="qf-field"><path class="qf-link" d="M23.4 -1.8 L27 2.6 L28.8 8" stroke-width=".85" opacity=".38" pathLength="1"/><circle cx="27" cy="2.6" r="1.6" fill="currentColor" stroke="none" class="qf-node" opacity=".9"/><circle cx="23.4" cy="-1.8" r="0.85" fill="currentColor" stroke="none" class="qf-dot" opacity=".45"/><circle cx="28.8" cy="8" r="0.85" fill="currentColor" stroke="none" class="qf-dot" opacity=".45"/></g></svg></a>
+        </div>
+        <dl class="hero__facts">
+          <div><dt>50,000,000</dt><dd>$Q, a fixed cap</dd></div>
+          <div><dt>Every 4 years</dt><dd>the reward halves</dd></div>
+          <div><dt>1,000 nodes</dt><dd>before the first round</dd></div>
+        </dl>
+      </div>
 
-    <section aria-labelledby="how">
-      <p class="kicker">How it works</p>
-      <h2 id="how">Four steps, every 10 minutes</h2>
-      <ol class="steps">
-        <li class="card"><h3>Stay online</h3><p>The QuFi Node app sends a signed heartbeat every 5 minutes. Each one carries the latest public random number, so it cannot be made in advance.</p></li>
-        <li class="card"><h3>Get one ticket</h3><p>Each round, every eligible phone gets exactly one ticket, worked out from the round's random number and the phone's own hardware key.</p></li>
-        <li class="card"><h3>The draw</h3><p>Tickets below the round's target win. The target adjusts like Bitcoin's difficulty, so the network mines the planned amount however many phones join.</p></li>
-        <li class="card"><h3>Win 1 $Q</h3><p>Anyone can check a win from public data alone. The $Q is credited to the phone owner's account.</p></li>
-      </ol>
-    </section>
-
-    <section aria-labelledby="round">
-      <p class="kicker">One round</p>
-      <h2 id="round">From random number to <em>$Q</em></h2>
-      <div class="card diagram">
-        <svg viewBox="0 0 760 304" role="img" aria-label="One round: a new random value, eligible phones each get one ticket, tickets below the target win, the claim is checked and 1 $Q is credited, then the target adjusts for the next round.">
-          <defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path class="d-arrow" d="M0 0L10 5L0 10z"/></marker></defs>
-          <text class="d-title" x="24" y="34">A phone wins when its one ticket falls below the target</text>
-          <g class="d-line">
-            <path d="M184 118H208" marker-end="url(#ar)"/>
-            <path d="M368 118H392" marker-end="url(#ar)"/>
-            <path d="M552 118H584" marker-end="url(#ar)"/>
-            <path d="M648 158V222" marker-end="url(#ar)"/>
-            <path d="M576 250H552" marker-end="url(#ar)"/>
-            <path d="M392 250H368" marker-end="url(#ar)"/>
-            <path d="M208 250H104V146" marker-end="url(#ar)"/>
-            <path d="M648 78V64H104V90" marker-end="url(#ar)"/>
+      <div class="hero__stage" data-hero-stage>
+        <div class="hero__bg gl" data-gl="sphere" data-points="3200" data-chords="150" aria-hidden="true"></div>
+        <span class="hero__halo" aria-hidden="true"></span>
+        <span class="hero__ring hero__ring--a" aria-hidden="true"></span>
+        <span class="hero__ring hero__ring--b" aria-hidden="true"></span>
+        <svg class="mine mine--under" viewBox="0 0 600 600" aria-hidden="true" focusable="false">
+          <circle class="mine__round" cx="300" cy="300" r="210" fill="none" stroke="#1557FF" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="1319.5" stroke-dashoffset="330" transform="rotate(-90 300 300)"/>
+      <g class="mine__beam" style="--s:3">
+        <line x1="300" y1="300" x2="523.6" y2="392.6" stroke="#1557FF" stroke-opacity=".14" stroke-width="9" stroke-linecap="round"/>
+        <line x1="300" y1="300" x2="523.6" y2="392.6" stroke="#1557FF" stroke-width="2" stroke-linecap="round"/>
+      </g>
+      <g class="mine__beam" style="--s:6">
+        <line x1="300" y1="300" x2="392.6" y2="523.6" stroke="#1557FF" stroke-opacity=".14" stroke-width="9" stroke-linecap="round"/>
+        <line x1="300" y1="300" x2="392.6" y2="523.6" stroke="#1557FF" stroke-width="2" stroke-linecap="round"/>
+      </g>
+      <g class="mine__beam" style="--s:1">
+        <line x1="300" y1="300" x2="207.4" y2="523.6" stroke="#1557FF" stroke-opacity=".14" stroke-width="9" stroke-linecap="round"/>
+        <line x1="300" y1="300" x2="207.4" y2="523.6" stroke="#1557FF" stroke-width="2" stroke-linecap="round"/>
+      </g>
+      <g class="mine__beam" style="--s:4">
+        <line x1="300" y1="300" x2="76.4" y2="392.6" stroke="#1557FF" stroke-opacity=".14" stroke-width="9" stroke-linecap="round"/>
+        <line x1="300" y1="300" x2="76.4" y2="392.6" stroke="#1557FF" stroke-width="2" stroke-linecap="round"/>
+      </g>
+      <g class="mine__beam" style="--s:7">
+        <line x1="300" y1="300" x2="76.4" y2="207.4" stroke="#1557FF" stroke-opacity=".14" stroke-width="9" stroke-linecap="round"/>
+        <line x1="300" y1="300" x2="76.4" y2="207.4" stroke="#1557FF" stroke-width="2" stroke-linecap="round"/>
+      </g>
+      <g class="mine__beam" style="--s:2">
+        <line x1="300" y1="300" x2="207.4" y2="76.4" stroke="#1557FF" stroke-opacity=".14" stroke-width="9" stroke-linecap="round"/>
+        <line x1="300" y1="300" x2="207.4" y2="76.4" stroke="#1557FF" stroke-width="2" stroke-linecap="round"/>
+      </g>
+      <g class="mine__beam" style="--s:5">
+        <line x1="300" y1="300" x2="392.6" y2="76.4" stroke="#1557FF" stroke-opacity=".14" stroke-width="9" stroke-linecap="round"/>
+        <line x1="300" y1="300" x2="392.6" y2="76.4" stroke="#1557FF" stroke-width="2" stroke-linecap="round"/>
+      </g>
+      <g class="mine__beam is-on" style="--s:0">
+        <line x1="300" y1="300" x2="523.6" y2="207.4" stroke="#1557FF" stroke-opacity=".14" stroke-width="9" stroke-linecap="round"/>
+        <line x1="300" y1="300" x2="523.6" y2="207.4" stroke="#1557FF" stroke-width="2" stroke-linecap="round"/>
+      </g>
+        </svg>
+        <img class="hero__q" src="assets/img/qicon.png"
+             alt="The QuFi mark, with node phones around it, one of them winning 1 $Q" width="1100" height="996"
+             fetchpriority="high" decoding="async">
+        <span class="hero__orbit" aria-hidden="true"><i></i></span>
+        <svg class="mine mine--over" viewBox="0 0 600 600" aria-hidden="true" focusable="false">
+          <defs>
+            <radialGradient id="mg-glow"><stop offset="0" stop-color="#1557FF" stop-opacity=".26"/><stop offset="1" stop-color="#1557FF" stop-opacity="0"/></radialGradient>
+          </defs>
+      <g transform="rotate(22.5 300 300)"><g class="mine__coin" style="--s:3" opacity="0"><g transform="rotate(-22.5 450 300)">
+        <circle cx="450" cy="300" r="12.5" fill="#FFFFFF" stroke="#1557FF" stroke-width="1.5"/>
+        <image href="assets/img/qicon-sm.png" x="441" y="291" width="18" height="18"/>
+      </g></g></g>
+      <g transform="rotate(67.5 300 300)"><g class="mine__coin" style="--s:6" opacity="0"><g transform="rotate(-67.5 450 300)">
+        <circle cx="450" cy="300" r="12.5" fill="#FFFFFF" stroke="#1557FF" stroke-width="1.5"/>
+        <image href="assets/img/qicon-sm.png" x="441" y="291" width="18" height="18"/>
+      </g></g></g>
+      <g transform="rotate(112.5 300 300)"><g class="mine__coin" style="--s:1" opacity="0"><g transform="rotate(-112.5 450 300)">
+        <circle cx="450" cy="300" r="12.5" fill="#FFFFFF" stroke="#1557FF" stroke-width="1.5"/>
+        <image href="assets/img/qicon-sm.png" x="441" y="291" width="18" height="18"/>
+      </g></g></g>
+      <g transform="rotate(157.5 300 300)"><g class="mine__coin" style="--s:4" opacity="0"><g transform="rotate(-157.5 450 300)">
+        <circle cx="450" cy="300" r="12.5" fill="#FFFFFF" stroke="#1557FF" stroke-width="1.5"/>
+        <image href="assets/img/qicon-sm.png" x="441" y="291" width="18" height="18"/>
+      </g></g></g>
+      <g transform="rotate(202.5 300 300)"><g class="mine__coin" style="--s:7" opacity="0"><g transform="rotate(-202.5 450 300)">
+        <circle cx="450" cy="300" r="12.5" fill="#FFFFFF" stroke="#1557FF" stroke-width="1.5"/>
+        <image href="assets/img/qicon-sm.png" x="441" y="291" width="18" height="18"/>
+      </g></g></g>
+      <g transform="rotate(247.5 300 300)"><g class="mine__coin" style="--s:2" opacity="0"><g transform="rotate(-247.5 450 300)">
+        <circle cx="450" cy="300" r="12.5" fill="#FFFFFF" stroke="#1557FF" stroke-width="1.5"/>
+        <image href="assets/img/qicon-sm.png" x="441" y="291" width="18" height="18"/>
+      </g></g></g>
+      <g transform="rotate(292.5 300 300)"><g class="mine__coin" style="--s:5" opacity="0"><g transform="rotate(-292.5 450 300)">
+        <circle cx="450" cy="300" r="12.5" fill="#FFFFFF" stroke="#1557FF" stroke-width="1.5"/>
+        <image href="assets/img/qicon-sm.png" x="441" y="291" width="18" height="18"/>
+      </g></g></g>
+      <g transform="rotate(337.5 300 300)"><g class="mine__coin" style="--s:0" opacity="0"><g transform="rotate(-337.5 450 300)">
+        <circle cx="450" cy="300" r="12.5" fill="#FFFFFF" stroke="#1557FF" stroke-width="1.5"/>
+        <image href="assets/img/qicon-sm.png" x="441" y="291" width="18" height="18"/>
+      </g></g></g>
+      <g transform="translate(560.5 407.9)">
+        <g class="mine__w" style="--s:3"><circle r="62" fill="url(#mg-glow)"/></g>
+        <rect x="-22" y="-34" width="44" height="74" rx="10" fill="#EAF1FF"/>
+        <rect x="-22" y="-37" width="44" height="74" rx="10" fill="#FFFFFF" stroke="#9CBDF8" stroke-width="1.5"/>
+        <rect x="-17" y="-30" width="34" height="56" rx="5" fill="#F8FAFC"/>
+        <g class="mine__w" style="--s:3"><rect x="-17" y="-30" width="34" height="56" rx="5" fill="#EAF1FF"/></g>
+        <image href="assets/img/qicon-sm.png" x="-11" y="-23" width="22" height="22"/>
+        <rect x="-10" y="6" width="20" height="3" rx="1.5" fill="#CFE0FB"/>
+        <rect x="-7" y="13" width="14" height="3" rx="1.5" fill="#CFE0FB"/>
+        <path d="M-5 31.5h10" stroke="#CFE0FB" stroke-width="2" stroke-linecap="round"/>
+        <g class="mine__w" style="--s:3">
+          <rect x="-22" y="-37" width="44" height="74" rx="10" fill="none" stroke="#1557FF" stroke-width="2.2"/>
+          <g transform="translate(-66 0)">
+            <rect x="-32" y="-13.5" width="64" height="27" rx="13.5" fill="#1557FF"/>
+            <text x="0" y="5" text-anchor="middle" font-family="Inter, -apple-system, 'Segoe UI', system-ui, sans-serif" font-size="14" font-weight="600" fill="#FFFFFF">+1 $Q</text>
           </g>
-          <rect class="d-box" x="24" y="90" width="160" height="56" rx="8"/>
-          <text class="d-name" x="104" y="114" text-anchor="middle">Round starts</text>
-          <text class="d-sub" x="104" y="130" text-anchor="middle">a new random value</text>
-          <rect class="d-box" x="208" y="90" width="160" height="56" rx="8"/>
-          <text class="d-name" x="288" y="114" text-anchor="middle">Eligible phones</text>
-          <text class="d-sub" x="288" y="130" text-anchor="middle">licensed and online</text>
-          <rect class="d-box" x="392" y="90" width="160" height="56" rx="8"/>
-          <text class="d-name" x="472" y="114" text-anchor="middle">One ticket each</text>
-          <text class="d-sub" x="472" y="130" text-anchor="middle">SHA256(value, key)</text>
-          <polygon class="d-box" points="584,118 648,78 712,118 648,158"/>
-          <text class="d-name" x="648" y="122" text-anchor="middle">Below target?</text>
-          <rect class="d-box" x="576" y="222" width="160" height="56" rx="8"/>
-          <text class="d-name" x="656" y="246" text-anchor="middle">Claim checked</text>
-          <text class="d-sub" x="656" y="262" text-anchor="middle">anyone can recheck</text>
-          <rect class="d-win" x="392" y="222" width="160" height="56" rx="8"/>
-          <text class="d-name" x="472" y="246" text-anchor="middle">1 $Q credited</text>
-          <text class="d-sub" x="472" y="262" text-anchor="middle">to the phone's owner</text>
-          <rect class="d-box" x="208" y="222" width="160" height="56" rx="8"/>
-          <text class="d-name" x="288" y="246" text-anchor="middle">Target adjusts</text>
-          <text class="d-sub" x="288" y="262" text-anchor="middle">toward planned wins</text>
-          <text class="d-sub" x="658" y="194">yes</text>
-          <text class="d-sub" x="376" y="56" text-anchor="middle">no win: next round</text>
-          <text class="d-sub" x="112" y="204">next round, new target</text>
+        </g>
+        <circle class="mine__ping" style="--o:0" cx="22" cy="-37" r="8.5" fill="#17A673" opacity=".16"/>
+        <circle cx="22" cy="-37" r="5" fill="#17A673" stroke="#FFFFFF" stroke-width="1.8"/>
+      </g>
+      <g transform="translate(407.9 560.5)">
+        <g class="mine__w" style="--s:6"><circle r="62" fill="url(#mg-glow)"/></g>
+        <rect x="-22" y="-34" width="44" height="74" rx="10" fill="#EAF1FF"/>
+        <rect x="-22" y="-37" width="44" height="74" rx="10" fill="#FFFFFF" stroke="#9CBDF8" stroke-width="1.5"/>
+        <rect x="-17" y="-30" width="34" height="56" rx="5" fill="#F8FAFC"/>
+        <g class="mine__w" style="--s:6"><rect x="-17" y="-30" width="34" height="56" rx="5" fill="#EAF1FF"/></g>
+        <image href="assets/img/qicon-sm.png" x="-11" y="-23" width="22" height="22"/>
+        <rect x="-10" y="6" width="20" height="3" rx="1.5" fill="#CFE0FB"/>
+        <rect x="-7" y="13" width="14" height="3" rx="1.5" fill="#CFE0FB"/>
+        <path d="M-5 31.5h10" stroke="#CFE0FB" stroke-width="2" stroke-linecap="round"/>
+        <g class="mine__w" style="--s:6">
+          <rect x="-22" y="-37" width="44" height="74" rx="10" fill="none" stroke="#1557FF" stroke-width="2.2"/>
+          <g transform="translate(-66 0)">
+            <rect x="-32" y="-13.5" width="64" height="27" rx="13.5" fill="#1557FF"/>
+            <text x="0" y="5" text-anchor="middle" font-family="Inter, -apple-system, 'Segoe UI', system-ui, sans-serif" font-size="14" font-weight="600" fill="#FFFFFF">+1 $Q</text>
+          </g>
+        </g>
+        <circle class="mine__ping" style="--o:1" cx="22" cy="-37" r="8.5" fill="#17A673" opacity=".16"/>
+        <circle cx="22" cy="-37" r="5" fill="#17A673" stroke="#FFFFFF" stroke-width="1.8"/>
+      </g>
+      <g transform="translate(192.1 560.5)">
+        <g class="mine__w" style="--s:1"><circle r="62" fill="url(#mg-glow)"/></g>
+        <rect x="-22" y="-34" width="44" height="74" rx="10" fill="#EAF1FF"/>
+        <rect x="-22" y="-37" width="44" height="74" rx="10" fill="#FFFFFF" stroke="#9CBDF8" stroke-width="1.5"/>
+        <rect x="-17" y="-30" width="34" height="56" rx="5" fill="#F8FAFC"/>
+        <g class="mine__w" style="--s:1"><rect x="-17" y="-30" width="34" height="56" rx="5" fill="#EAF1FF"/></g>
+        <image href="assets/img/qicon-sm.png" x="-11" y="-23" width="22" height="22"/>
+        <rect x="-10" y="6" width="20" height="3" rx="1.5" fill="#CFE0FB"/>
+        <rect x="-7" y="13" width="14" height="3" rx="1.5" fill="#CFE0FB"/>
+        <path d="M-5 31.5h10" stroke="#CFE0FB" stroke-width="2" stroke-linecap="round"/>
+        <g class="mine__w" style="--s:1">
+          <rect x="-22" y="-37" width="44" height="74" rx="10" fill="none" stroke="#1557FF" stroke-width="2.2"/>
+          <g transform="translate(66 0)">
+            <rect x="-32" y="-13.5" width="64" height="27" rx="13.5" fill="#1557FF"/>
+            <text x="0" y="5" text-anchor="middle" font-family="Inter, -apple-system, 'Segoe UI', system-ui, sans-serif" font-size="14" font-weight="600" fill="#FFFFFF">+1 $Q</text>
+          </g>
+        </g>
+        <circle class="mine__ping" style="--o:2" cx="22" cy="-37" r="8.5" fill="#17A673" opacity=".16"/>
+        <circle cx="22" cy="-37" r="5" fill="#17A673" stroke="#FFFFFF" stroke-width="1.8"/>
+      </g>
+      <g transform="translate(39.5 407.9)">
+        <g class="mine__w" style="--s:4"><circle r="62" fill="url(#mg-glow)"/></g>
+        <rect x="-22" y="-34" width="44" height="74" rx="10" fill="#EAF1FF"/>
+        <rect x="-22" y="-37" width="44" height="74" rx="10" fill="#FFFFFF" stroke="#9CBDF8" stroke-width="1.5"/>
+        <rect x="-17" y="-30" width="34" height="56" rx="5" fill="#F8FAFC"/>
+        <g class="mine__w" style="--s:4"><rect x="-17" y="-30" width="34" height="56" rx="5" fill="#EAF1FF"/></g>
+        <image href="assets/img/qicon-sm.png" x="-11" y="-23" width="22" height="22"/>
+        <rect x="-10" y="6" width="20" height="3" rx="1.5" fill="#CFE0FB"/>
+        <rect x="-7" y="13" width="14" height="3" rx="1.5" fill="#CFE0FB"/>
+        <path d="M-5 31.5h10" stroke="#CFE0FB" stroke-width="2" stroke-linecap="round"/>
+        <g class="mine__w" style="--s:4">
+          <rect x="-22" y="-37" width="44" height="74" rx="10" fill="none" stroke="#1557FF" stroke-width="2.2"/>
+          <g transform="translate(66 0)">
+            <rect x="-32" y="-13.5" width="64" height="27" rx="13.5" fill="#1557FF"/>
+            <text x="0" y="5" text-anchor="middle" font-family="Inter, -apple-system, 'Segoe UI', system-ui, sans-serif" font-size="14" font-weight="600" fill="#FFFFFF">+1 $Q</text>
+          </g>
+        </g>
+        <circle class="mine__ping" style="--o:3" cx="22" cy="-37" r="8.5" fill="#17A673" opacity=".16"/>
+        <circle cx="22" cy="-37" r="5" fill="#17A673" stroke="#FFFFFF" stroke-width="1.8"/>
+      </g>
+      <g transform="translate(39.5 192.1)">
+        <g class="mine__w" style="--s:7"><circle r="62" fill="url(#mg-glow)"/></g>
+        <rect x="-22" y="-34" width="44" height="74" rx="10" fill="#EAF1FF"/>
+        <rect x="-22" y="-37" width="44" height="74" rx="10" fill="#FFFFFF" stroke="#9CBDF8" stroke-width="1.5"/>
+        <rect x="-17" y="-30" width="34" height="56" rx="5" fill="#F8FAFC"/>
+        <g class="mine__w" style="--s:7"><rect x="-17" y="-30" width="34" height="56" rx="5" fill="#EAF1FF"/></g>
+        <image href="assets/img/qicon-sm.png" x="-11" y="-23" width="22" height="22"/>
+        <rect x="-10" y="6" width="20" height="3" rx="1.5" fill="#CFE0FB"/>
+        <rect x="-7" y="13" width="14" height="3" rx="1.5" fill="#CFE0FB"/>
+        <path d="M-5 31.5h10" stroke="#CFE0FB" stroke-width="2" stroke-linecap="round"/>
+        <g class="mine__w" style="--s:7">
+          <rect x="-22" y="-37" width="44" height="74" rx="10" fill="none" stroke="#1557FF" stroke-width="2.2"/>
+          <g transform="translate(66 0)">
+            <rect x="-32" y="-13.5" width="64" height="27" rx="13.5" fill="#1557FF"/>
+            <text x="0" y="5" text-anchor="middle" font-family="Inter, -apple-system, 'Segoe UI', system-ui, sans-serif" font-size="14" font-weight="600" fill="#FFFFFF">+1 $Q</text>
+          </g>
+        </g>
+        <circle class="mine__ping" style="--o:4" cx="22" cy="-37" r="8.5" fill="#17A673" opacity=".16"/>
+        <circle cx="22" cy="-37" r="5" fill="#17A673" stroke="#FFFFFF" stroke-width="1.8"/>
+      </g>
+      <g transform="translate(192.1 39.5)">
+        <g class="mine__w" style="--s:2"><circle r="62" fill="url(#mg-glow)"/></g>
+        <rect x="-22" y="-34" width="44" height="74" rx="10" fill="#EAF1FF"/>
+        <rect x="-22" y="-37" width="44" height="74" rx="10" fill="#FFFFFF" stroke="#9CBDF8" stroke-width="1.5"/>
+        <rect x="-17" y="-30" width="34" height="56" rx="5" fill="#F8FAFC"/>
+        <g class="mine__w" style="--s:2"><rect x="-17" y="-30" width="34" height="56" rx="5" fill="#EAF1FF"/></g>
+        <image href="assets/img/qicon-sm.png" x="-11" y="-23" width="22" height="22"/>
+        <rect x="-10" y="6" width="20" height="3" rx="1.5" fill="#CFE0FB"/>
+        <rect x="-7" y="13" width="14" height="3" rx="1.5" fill="#CFE0FB"/>
+        <path d="M-5 31.5h10" stroke="#CFE0FB" stroke-width="2" stroke-linecap="round"/>
+        <g class="mine__w" style="--s:2">
+          <rect x="-22" y="-37" width="44" height="74" rx="10" fill="none" stroke="#1557FF" stroke-width="2.2"/>
+          <g transform="translate(66 0)">
+            <rect x="-32" y="-13.5" width="64" height="27" rx="13.5" fill="#1557FF"/>
+            <text x="0" y="5" text-anchor="middle" font-family="Inter, -apple-system, 'Segoe UI', system-ui, sans-serif" font-size="14" font-weight="600" fill="#FFFFFF">+1 $Q</text>
+          </g>
+        </g>
+        <circle class="mine__ping" style="--o:5" cx="22" cy="-37" r="8.5" fill="#17A673" opacity=".16"/>
+        <circle cx="22" cy="-37" r="5" fill="#17A673" stroke="#FFFFFF" stroke-width="1.8"/>
+      </g>
+      <g transform="translate(407.9 39.5)">
+        <g class="mine__w" style="--s:5"><circle r="62" fill="url(#mg-glow)"/></g>
+        <rect x="-22" y="-34" width="44" height="74" rx="10" fill="#EAF1FF"/>
+        <rect x="-22" y="-37" width="44" height="74" rx="10" fill="#FFFFFF" stroke="#9CBDF8" stroke-width="1.5"/>
+        <rect x="-17" y="-30" width="34" height="56" rx="5" fill="#F8FAFC"/>
+        <g class="mine__w" style="--s:5"><rect x="-17" y="-30" width="34" height="56" rx="5" fill="#EAF1FF"/></g>
+        <image href="assets/img/qicon-sm.png" x="-11" y="-23" width="22" height="22"/>
+        <rect x="-10" y="6" width="20" height="3" rx="1.5" fill="#CFE0FB"/>
+        <rect x="-7" y="13" width="14" height="3" rx="1.5" fill="#CFE0FB"/>
+        <path d="M-5 31.5h10" stroke="#CFE0FB" stroke-width="2" stroke-linecap="round"/>
+        <g class="mine__w" style="--s:5">
+          <rect x="-22" y="-37" width="44" height="74" rx="10" fill="none" stroke="#1557FF" stroke-width="2.2"/>
+          <g transform="translate(-66 0)">
+            <rect x="-32" y="-13.5" width="64" height="27" rx="13.5" fill="#1557FF"/>
+            <text x="0" y="5" text-anchor="middle" font-family="Inter, -apple-system, 'Segoe UI', system-ui, sans-serif" font-size="14" font-weight="600" fill="#FFFFFF">+1 $Q</text>
+          </g>
+        </g>
+        <circle class="mine__ping" style="--o:6" cx="22" cy="-37" r="8.5" fill="#17A673" opacity=".16"/>
+        <circle cx="22" cy="-37" r="5" fill="#17A673" stroke="#FFFFFF" stroke-width="1.8"/>
+      </g>
+      <g transform="translate(560.5 192.1)">
+        <g class="mine__w is-on" style="--s:0"><circle r="62" fill="url(#mg-glow)"/></g>
+        <rect x="-22" y="-34" width="44" height="74" rx="10" fill="#EAF1FF"/>
+        <rect x="-22" y="-37" width="44" height="74" rx="10" fill="#FFFFFF" stroke="#9CBDF8" stroke-width="1.5"/>
+        <rect x="-17" y="-30" width="34" height="56" rx="5" fill="#F8FAFC"/>
+        <g class="mine__w is-on" style="--s:0"><rect x="-17" y="-30" width="34" height="56" rx="5" fill="#EAF1FF"/></g>
+        <image href="assets/img/qicon-sm.png" x="-11" y="-23" width="22" height="22"/>
+        <rect x="-10" y="6" width="20" height="3" rx="1.5" fill="#CFE0FB"/>
+        <rect x="-7" y="13" width="14" height="3" rx="1.5" fill="#CFE0FB"/>
+        <path d="M-5 31.5h10" stroke="#CFE0FB" stroke-width="2" stroke-linecap="round"/>
+        <g class="mine__w is-on" style="--s:0">
+          <rect x="-22" y="-37" width="44" height="74" rx="10" fill="none" stroke="#1557FF" stroke-width="2.2"/>
+          <g transform="translate(-66 0)">
+            <rect x="-32" y="-13.5" width="64" height="27" rx="13.5" fill="#1557FF"/>
+            <text x="0" y="5" text-anchor="middle" font-family="Inter, -apple-system, 'Segoe UI', system-ui, sans-serif" font-size="14" font-weight="600" fill="#FFFFFF">+1 $Q</text>
+          </g>
+        </g>
+        <circle class="mine__ping" style="--o:7" cx="22" cy="-37" r="8.5" fill="#17A673" opacity=".16"/>
+        <circle cx="22" cy="-37" r="5" fill="#17A673" stroke="#FFFFFF" stroke-width="1.8"/>
+      </g>
+          <g transform="translate(300 472)">
+            <rect x="-80" y="-14" width="160" height="28" rx="14" fill="#FFFFFF" stroke="#CFE0FB" stroke-width="1.25"/>
+            <circle class="mine__tick" cx="-62" cy="0" r="3.5" fill="#1557FF"/>
+            <text x="-51" y="3.7" font-family="Inter, -apple-system, 'Segoe UI', system-ui, sans-serif" font-size="10.5" font-weight="600" letter-spacing="1.2" fill="#1557FF">DRAW EVERY 10 MIN</text>
+          </g>
         </svg>
       </div>
-      <p class="caption">Each phone gets one ticket a round. A ticket under the target wins 1 $Q, and the target then moves toward the planned number of wins for the next round.</p>
-    </section>
-
-    <section aria-labelledby="who">
-      <p class="kicker">Who can win</p>
-      <h2 id="who">Four checks, every round</h2>
-      <p class="intro">A phone is in the draw only when all four hold. Uptime is the easiest thing to fake, so each ticket has to cost one real phone, one licence and one person.</p>
-      <div class="checks">
-        <div class="card check"><svg viewBox="0 0 28 28" aria-hidden="true"><circle class="tick-bg" cx="14" cy="14" r="14"/><path class="tick" d="M8.5 14.5l3.6 3.6 7.4-8"/></svg><h3>A node licence</h3><p>The phone joined with an invite or licence signed by the network key.</p></div>
-        <div class="card check"><svg viewBox="0 0 28 28" aria-hidden="true"><circle class="tick-bg" cx="14" cy="14" r="14"/><path class="tick" d="M8.5 14.5l3.6 3.6 7.4-8"/></svg><h3>A real phone</h3><p>Its key lives in the phone's security chip, proven by Android Key Attestation. Emulators and servers cannot fake that proof.</p></div>
-        <div class="card check"><svg viewBox="0 0 28 28" aria-hidden="true"><circle class="tick-bg" cx="14" cy="14" r="14"/><path class="tick" d="M8.5 14.5l3.6 3.6 7.4-8"/></svg><h3>Online for the last day</h3><p>A heartbeat in every 5 minute slot for 24 hours, with up to 10 minutes of grace for a network blip.</p></div>
-        <div class="card check"><svg viewBox="0 0 28 28" aria-hidden="true"><circle class="tick-bg" cx="14" cy="14" r="14"/><path class="tick" d="M8.5 14.5l3.6 3.6 7.4-8"/></svg><h3>One per person</h3><p>Each person mines with a capped number of phones. Extra phones earn nothing more.</p></div>
-      </div>
-    </section>
-
-    <section aria-labelledby="fair">
-      <p class="kicker">A fair draw</p>
-      <h2 id="fair">Nobody can rig the <em>random number</em></h2>
-      <p class="analogy">Think of a raffle where every ticket was printed the day before, and the winning number is drawn by <strong>many independent referees</strong> who each sign it. Nobody can change a ticket, and nobody can pick the number.</p>
-      <div class="pair">
-        <div class="card"><h3>Made by many, not one</h3><p>The number comes from drand, run by the independent operators of the League of Entropy. None of them knows it in advance or can set it alone.</p></div>
-        <div class="card"><h3>Signed and checked by every phone</h3><p>Each number is signed. The app holds drand's public key and refuses any number whose signature does not check out.</p></div>
-        <div class="card"><h3>Everything else is fixed first</h3><p>Phone keys, who is eligible and the target are all settled before the number exists, so nothing can be adjusted after seeing it.</p></div>
-        <div class="card"><h3>No backdoor</h3><p>If drand ever stopped, mining would simply pause. It never switches to a number a person picks.</p></div>
-      </div>
-    </section>
-
-    <section aria-labelledby="work">
-      <p class="kicker">Proof of contribution</p>
-      <h2 id="work">Doing the work earns a second ticket</h2>
-      <p class="intro">Uptime earns a phone its ticket. A phone that answers 95% or more of the signing work it is asked for over 7 days gets one extra ticket each round. Never more than two.</p>
-      <div class="split">
-        <div class="card yes"><p class="label">Counts</p><ul><li>Answering a signing round on time</li><li>Correctly refusing a bad request</li><li>Helping make a new vault's key</li><li>Later: vouching for fellow nodes' heartbeats</li></ul></div>
-        <div class="card no"><p class="label">Never counts</p><ul><li>Approving a payment. A node paid per signature would be paid to say yes, the opposite of what keeps vaults safe.</li><li>A refusal of a bad request scores exactly the same as a signature on a good one.</li></ul></div>
-      </div>
-    </section>
-
-    <section aria-labelledby="supply">
-      <p class="kicker">Supply</p>
-      <h2 id="supply">Built like <em>Bitcoin</em></h2>
-      <p class="intro">$Q follows Bitcoin's schedule. The $Q mined per round halves every 210,000 rounds, about every 4 years. The first era mines half of all $Q, each era after it half of the one before, approaching 50,000,000 and never passing it.</p>
-      <div class="card chart-card">
-        <h3>Total $Q mined over the first 40 years</h3>
-        <div class="chart-wrap" id="chart">
-          <svg id="supply-svg" viewBox="0 0 720 320" role="img" aria-label="Total $Q mined rises to 25 million by year 4, 37.5 million by year 8 and about 48.4 million by year 20, approaching the 50 million cap."></svg>
-          <div class="tip" id="tip" hidden></div>
-        </div>
-      </div>
-      <div class="card callout"><span class="big">1,000</span><p>Mining starts only once 1,000 licensed nodes are online, so the richest first era is shared widely instead of going to a handful of early phones.</p></div>
-      <div class="card table-wrap">
-        <table>
-          <thead><tr><th>Era</th><th>Years</th><th class="num">Mined in the era</th><th class="num">Total mined</th><th class="num">Winners per round</th></tr></thead>
-          <tbody>
-            <tr class="first"><td>1</td><td>0 to 4</td><td class="num">25,000,000</td><td class="num">25,000,000 (50%)</td><td class="num">about 119</td></tr>
-            <tr><td>2</td><td>4 to 8</td><td class="num">12,500,000</td><td class="num">37,500,000 (75%)</td><td class="num">about 60</td></tr>
-            <tr><td>3</td><td>8 to 12</td><td class="num">6,250,000</td><td class="num">43,750,000 (87.5%)</td><td class="num">about 30</td></tr>
-            <tr><td>4</td><td>12 to 16</td><td class="num">3,125,000</td><td class="num">46,875,000 (94%)</td><td class="num">about 15</td></tr>
-            <tr><td>5</td><td>16 to 20</td><td class="num">1,562,500</td><td class="num">48,437,500 (97%)</td><td class="num">about 7</td></tr>
-            <tr><td>6</td><td>20 to 24</td><td class="num">781,250</td><td class="num">49,218,750 (98.4%)</td><td class="num">about 4</td></tr>
-            <tr><td>10</td><td>36 to 40</td><td class="num">48,828</td><td class="num">49,951,172 (99.9%)</td><td class="num">about 0.2</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-
-    <section aria-labelledby="road">
-      <p class="kicker">Rollout</p>
-      <h2 id="road">Step by step, on the test network first</h2>
-      <ol class="road">
-        <li data-n="1" class="now"><div><h3>Three phone trial</h3><p>Phones sign Palm payments for real. No mining yet.</p></div></li>
-        <li data-n="2"><div><h3>Heartbeats only</h3><p>The app sends heartbeats and shows how long the phone has been online.</p></div></li>
-        <li data-n="3"><div><h3>$Q as points</h3><p>Draws run and wins are credited as $Q that cannot be transferred, once 1,000 nodes are online.</p></div></li>
-        <li data-n="4"><div><h3>Second ticket on</h3><p>The extra ticket for phones that do their signing work.</p></div></li>
-        <li data-n="5"><div><h3>Checked on chain</h3><p>A program on QuFi's Solana network checks every claim.</p></div></li>
-        <li data-n="6"><div><h3>Transfers, only if approved</h3><p>Only after legal review in each launch country.</p></div></li>
-      </ol>
-    </section>
-
-  </div>
-</main>
-
-<footer>
-  <div class="wrap">
-    <div class="foot-row">
-      <div class="foot-logo">
-        <img class="q" src="qicon.png" alt="" width="320" height="320">
-        <img class="wm wm-light" src="qufi-wordmark.png" alt="QuFi" width="546" height="96">
-        <img class="wm wm-dark" src="qufi-wordmark-white.png" alt="QuFi" width="546" height="96">
-      </div>
     </div>
-    <p>Planned design, November 2026. Details may change before launch. $Q cannot be transferred at launch; any change to that needs legal review in each launch country first. Figures describe the planned schedule, not a promise of any reward.</p>
-  </div>
-</footer>
 
+    <p class="hero__scroll" aria-hidden="true"><span>Scroll</span><i></i></p>
+  </div>
+</section>
+  
+  <section class="section section--drift " id="how"
+    data-sec="How it works" data-track>
+    
+    <div class="wrap "><div class="reveal" data-arrive>
+    <div class="">
+      <p class="eyebrow">How it works</p>
+      <h2 class="d2">Four steps, <strong>every 10 minutes</strong></h2>
+      <p class="lede">Mining runs on the phones that already keep the network running. Staying online is the work.</p>
+      
+    </div></div><div class="mt-4"></div><div class="reveal" data-arrive>
+    <div class="rule-label"><span>One round</span></div>
+    
+    
+    <div class="rail "
+         data-cols="4">
+      
+      <span class="rail__line" aria-hidden="true"><i></i></span>
+      <ol class="rail__items" style="--n:4">
+        
+          <li class="rail__item" style="--i:0">
+            
+            <span class="rail__node ">
+              <i class="rail__ping" aria-hidden="true"></i>
+              <span class="rail__ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><rect x="7" y="3" width="10" height="18" rx="2.4" pathLength="1" data-pl="1"/><path d="M10.8 18.1h2.4" pathLength="1" data-pl="1"/><g class="qf-field"><path class="qf-link" d="M23 25.4 L27.2 20 L29.2 14.4" stroke-width=".85" opacity=".38" pathLength="1"/><circle cx="27.2" cy="20" r="1.6" fill="currentColor" stroke="none" class="qf-node" opacity=".9"/><circle cx="23" cy="25.4" r="0.85" fill="currentColor" stroke="none" class="qf-dot" opacity=".45"/><circle cx="29.2" cy="14.4" r="0.85" fill="currentColor" stroke="none" class="qf-dot" opacity=".45"/></g></svg></span>
+                 <span class="rail__no">01</span>
+            </span>
+            <h4>Stay online</h4>
+            <p>The QuFi Node app sends a signed heartbeat every 5 minutes. Each one carries the latest public random number, so it cannot be made in advance.</p>
+          </li>
+          <li class="rail__item" style="--i:1">
+            
+            <span class="rail__node ">
+              <i class="rail__ping" aria-hidden="true"></i>
+              <span class="rail__ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><circle cx="12" cy="9.4" r="5.8" pathLength="1" data-pl="1"/><path d="m9.6 9.5 1.8 1.8 3.2-3.4" pathLength="1" data-pl="1"/><path d="M8.6 14.2 7.2 21l4.8-2.4 4.8 2.4-1.4-6.8" pathLength="1" data-pl="1"/><g class="qf-field"><path class="qf-link" d="M1.6 25.2 L-3.2 19.4 L-4.2 13.6" stroke-width=".85" opacity=".38" pathLength="1"/><circle cx="-3.2" cy="19.4" r="1.6" fill="currentColor" stroke="none" class="qf-node" opacity=".9"/><circle cx="1.6" cy="25.2" r="0.85" fill="currentColor" stroke="none" class="qf-dot" opacity=".45"/><circle cx="-4.2" cy="13.6" r="0.85" fill="currentColor" stroke="none" class="qf-dot" opacity=".45"/></g></svg></span>
+                 <span class="rail__no">02</span>
+            </span>
+            <h4>Get one ticket</h4>
+            <p>Each round, every eligible phone gets exactly one ticket, worked out from the round's random number and the phone's own hardware key.</p>
+          </li>
+          <li class="rail__item" style="--i:2">
+            
+            <span class="rail__node ">
+              <i class="rail__ping" aria-hidden="true"></i>
+              <span class="rail__ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><circle cx="12" cy="12" r="8.25" pathLength="1" data-pl="1"/><circle cx="12" cy="12" r="4.4" pathLength="1" data-pl="1"/><circle cx="12" cy="12" r="1.1" fill="currentColor" stroke="none"/><g class="qf-field"><path class="qf-link" d="M1.2 -1.8 L-3 3 L-4 8.6" stroke-width=".85" opacity=".38" pathLength="1"/><circle cx="-3" cy="3" r="1.6" fill="currentColor" stroke="none" class="qf-node" opacity=".9"/><circle cx="1.2" cy="-1.8" r="0.85" fill="currentColor" stroke="none" class="qf-dot" opacity=".45"/><circle cx="-4" cy="8.6" r="0.85" fill="currentColor" stroke="none" class="qf-dot" opacity=".45"/></g></svg></span>
+                 <span class="rail__no">03</span>
+            </span>
+            <h4>The draw</h4>
+            <p>Tickets below the round's target win. The target adjusts like Bitcoin's difficulty, so the network mines the planned amount however many phones join.</p>
+          </li>
+          <li class="rail__item" style="--i:3">
+            
+            <span class="rail__node ">
+              <i class="rail__ping" aria-hidden="true"></i>
+              <span class="rail__ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><circle cx="11.4" cy="11.4" r="7.3" pathLength="1" data-pl="1"/><path d="m13.4 13.4 6.3 6.3" pathLength="1" data-pl="1"/><g class="qf-field"><path class="qf-link" d="M1.2 -1.8 L-3 3 L-4 8.6" stroke-width=".85" opacity=".38" pathLength="1"/><circle cx="-3" cy="3" r="1.6" fill="currentColor" stroke="none" class="qf-node" opacity=".9"/><circle cx="1.2" cy="-1.8" r="0.85" fill="currentColor" stroke="none" class="qf-dot" opacity=".45"/><circle cx="-4" cy="8.6" r="0.85" fill="currentColor" stroke="none" class="qf-dot" opacity=".45"/></g></svg></span>
+                 <span class="rail__no">04</span>
+            </span>
+            <h4>Win 1 $Q</h4>
+            <p>Anyone can check a win from public data alone. The $Q is credited to the phone owner's account.</p>
+          </li>
+      </ol>
+    </div></div></div>
+  </section>
+  <section class="section section--tint section--drift " id="round"
+    data-sec="One round" data-track>
+    
+    <div class="wrap "><div class="reveal" data-arrive>
+    <div class="">
+      <p class="eyebrow">One round</p>
+      <h2 class="d2">From random number to <strong>$Q</strong></h2>
+      
+      
+    </div></div><div class="mt-4"></div><div class="reveal" data-arrive>
+<figure class="diagram">
+  <div class="diagram__stage">
+    <span class="diagram__glow" aria-hidden="true"></span>
+    <svg class="qm-round" viewBox="0 0 760 304" role="img" font-family="Inter, -apple-system, 'Segoe UI', system-ui, sans-serif"
+         aria-label="One round: a new random value, eligible phones each get one ticket, tickets below the target win, the claim is checked and 1 $Q is credited, then the target adjusts for the next round.">
+      <defs><marker id="qm-ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#9CBDF8"/></marker></defs>
+      <g fill="none" stroke="#9CBDF8" stroke-width="1.5">
+        <path d="M184 118H208" marker-end="url(#qm-ar)"/>
+        <path d="M368 118H392" marker-end="url(#qm-ar)"/>
+        <path d="M552 118H584" marker-end="url(#qm-ar)"/>
+        <path d="M648 158V222" marker-end="url(#qm-ar)"/>
+        <path d="M576 250H552" marker-end="url(#qm-ar)"/>
+        <path d="M392 250H368" marker-end="url(#qm-ar)"/>
+        <path d="M208 250H104V146" marker-end="url(#qm-ar)"/>
+        <path d="M648 78V58H104V90" marker-end="url(#qm-ar)"/>
+      </g>
+      <g fill="#FFFFFF" stroke="#CFE0FB" stroke-width="1.25">
+        <rect x="24" y="90" width="160" height="56" rx="10"/>
+        <rect x="208" y="90" width="160" height="56" rx="10"/>
+        <rect x="392" y="90" width="160" height="56" rx="10"/>
+        <polygon points="584,118 648,78 712,118 648,158"/>
+        <rect x="576" y="222" width="160" height="56" rx="10"/>
+        <rect x="208" y="222" width="160" height="56" rx="10"/>
+      </g>
+      <rect x="392" y="222" width="160" height="56" rx="10" fill="#EAF1FF" stroke="#1557FF" stroke-width="2"/>
+      <g text-anchor="middle">
+        <text x="104" y="114" font-size="13" font-weight="600" fill="#071018">Round starts</text>
+        <text x="104" y="131" font-size="11.5" fill="#5D646F">a new random value</text>
+        <text x="288" y="114" font-size="13" font-weight="600" fill="#071018">Eligible phones</text>
+        <text x="288" y="131" font-size="11.5" fill="#5D646F">licensed and online</text>
+        <text x="472" y="114" font-size="13" font-weight="600" fill="#071018">One ticket each</text>
+        <text x="472" y="131" font-size="11.5" fill="#5D646F">SHA256(value, key)</text>
+        <text x="648" y="122" font-size="13" font-weight="600" fill="#071018">Below target?</text>
+        <text x="656" y="246" font-size="13" font-weight="600" fill="#071018">Claim checked</text>
+        <text x="656" y="263" font-size="11.5" fill="#5D646F">anyone can recheck</text>
+        <text x="472" y="246" font-size="13" font-weight="600" fill="#071018">1 $Q credited</text>
+        <text x="472" y="263" font-size="11.5" fill="#1557FF">to the phone's owner</text>
+        <text x="288" y="246" font-size="13" font-weight="600" fill="#071018">Target adjusts</text>
+        <text x="288" y="263" font-size="11.5" fill="#5D646F">toward planned wins</text>
+        <text x="376" y="48" font-size="11.5" fill="#878D98">no win: next round</text>
+      </g>
+      <text x="658" y="194" font-size="11.5" fill="#878D98">yes</text>
+      <text x="112" y="204" font-size="11.5" fill="#878D98">next round, new target</text>
+    </svg>
+  </div>
+  <figcaption>Each phone gets one ticket a round. A ticket under the target wins 1 $Q, and the target then moves toward the planned number of wins for the next round.</figcaption>
+</figure></div></div>
+  </section>
+  <section class="section section--drift " id="who"
+    data-sec="Who can win" data-track>
+    
+    <div class="wrap "><div class="reveal" data-arrive>
+    <div class="">
+      <p class="eyebrow">Who can win</p>
+      <h2 class="d2">Four checks, <strong>every round</strong></h2>
+      <p class="lede">A phone is in the draw only when all four hold. Uptime is the easiest thing to fake, so each ticket has to cost one real phone, one licence and one person.</p>
+      
+    </div></div><div class="mt-4"></div><div class="reveal" data-arrive>
+      <div class="grid g-2 grid--tilt" data-stagger data-marked>
+        <div class="card card--tile" style="--tone:#3BE08F">
+            <span class="sigil" aria-hidden="true"><i class="sigil__fill"></i><i class="sigil__edge"></i></span>
+            <div class="i-art i-art--sm"><svg class="il " viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="il-floor" d="M32 46.5 L50 53 L32 59.5 L14 53 Z" pathLength="1" data-pl="1"/><path class="il-floor" d="M32 44 L43 48 L32 52 L21 48 Z" pathLength="1" data-pl="1"/><path class="il-floor" d="M21 48 L32 52 L32 55 L21 51 Z" pathLength="1" data-pl="1"/><path class="il-floor" d="M32 52 L43 48 L43 51 L32 55 Z" pathLength="1" data-pl="1"/><path d="M32 6 l4.6 3 5.4 -.6 2 5 4.6 3 -1.8 5.2 1.8 5.2 -4.6 3 -2 5 -5.4 -.6 -4.6 3 -4.6 -3 -5.4 .6 -2 -5 -4.6 -3 1.8 -5.2 -1.8 -5.2 4.6 -3 2 -5 5.4 .6 Z" pathLength="1" data-pl="1"/><path class="il-key" d="M26 24 L30.5 28.3 L38 19.3" pathLength="1" data-pl="1"/><path class="il-web" d="M26 40 L24 48" pathLength="1" data-pl="1"/><path class="il-web" d="M38 40 L40 48" pathLength="1" data-pl="1"/><circle class="il-node" cx="32" cy="6" r="1.6" fill="currentColor" stroke="none"/></svg></div>
+            <h4 class="card__tt">A node licence</h4>
+            <p class="card__tx">The phone joined with an invite or licence signed by the network key.</p>
+          </div><div class="card card--tile" style="--tone:#A97BFF">
+            <span class="sigil" aria-hidden="true"><i class="sigil__fill"></i><i class="sigil__edge"></i></span>
+            <div class="i-art i-art--sm"><svg class="il " viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="il-floor" d="M32 46.2 L51 53 L32 59.8 L13 53 Z" pathLength="1" data-pl="1"/><path class="il-key" d="M32 22 c2.6 0 4.6 2.6 4.6 6.2 0 2.8 -.5 5.4 -1.5 7.8" pathLength="1" data-pl="1"/><path d="M24.8 28.6 c0 -5 3.2 -8.8 7.2 -8.8 4 0 7.2 3.8 7.2 8.8 0 4.6 -.8 8.8 -2.3 12.4" pathLength="1" data-pl="1"/><path d="M18.2 29 c0 -8.8 6.2 -15.4 13.8 -15.4 7.6 0 13.8 6.6 13.8 15.4 0 6.2 -1 11.8 -3 16.6" pathLength="1" data-pl="1"/><path class="il-web" d="M12 31 c0 -.8 0 -1.6 0 -2.4 C12 16 20.8 7 32 7 43.2 7 52 16 52 28.6 c0 2.6 -.2 5.2 -.5 7.8" pathLength="1" data-pl="1"/><path class="il-pulse" d="M9.5 17 A25 25 0 0 1 23.4 4.5" pathLength="1" data-pl="1"/><path class="il-floor" d="M32 45.7 L44 50 L32 54.3 L20 50 Z" pathLength="1" data-pl="1"/><path class="il-floor" d="M20 50 L32 54.3 L32 57.3 L20 53 Z" pathLength="1" data-pl="1"/><path class="il-floor" d="M32 54.3 L44 50 L44 53 L32 57.3 Z" pathLength="1" data-pl="1"/><circle class="il-node" cx="32" cy="7" r="1.6" fill="currentColor" stroke="none"/></svg></div>
+            <h4 class="card__tt">A real phone</h4>
+            <p class="card__tx">Its key lives in the phone's security chip, proven by Android Key Attestation. Emulators and servers cannot fake that proof.</p>
+          </div><div class="card card--tile" style="--tone:#FFB03A">
+            <span class="sigil" aria-hidden="true"><i class="sigil__fill"></i><i class="sigil__edge"></i></span>
+            <div class="i-art i-art--sm"><svg class="il " viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="il-floor" d="M32 45.5 L50 52 L32 58.5 L14 52 Z" pathLength="1" data-pl="1"/><path class="il-floor" d="M32 42.7 L44 47 L32 51.3 L20 47 Z" pathLength="1" data-pl="1"/><path class="il-floor" d="M20 47 L32 51.3 L32 54.3 L20 50 Z" pathLength="1" data-pl="1"/><path class="il-floor" d="M32 51.3 L44 47 L44 50 L32 54.3 Z" pathLength="1" data-pl="1"/><circle class="" cx="32" cy="25" r="17.4" pathLength="1" data-pl="1"/><path class="il-web" d="M46 25 L48.4 25" pathLength="1" data-pl="1"/><path class="il-web" d="M32 39 L32 41.4" pathLength="1" data-pl="1"/><path class="il-web" d="M18 25 L15.6 25" pathLength="1" data-pl="1"/><path class="il-web" d="M32 11 L32 8.6" pathLength="1" data-pl="1"/><path class="il-key" d="M32 25 L32 14.6" pathLength="1" data-pl="1"/><path class="il-key" d="M32 25 L40.6 29" pathLength="1" data-pl="1"/><path class="il-pulse" d="M32 4.4 A20.6 20.6 0 0 1 50.5 34" pathLength="1" data-pl="1"/><circle class="il-node" cx="32" cy="25" r="1.7" fill="currentColor" stroke="none"/></svg></div>
+            <h4 class="card__tt">Online for the last day</h4>
+            <p class="card__tx">A heartbeat in every 5 minute slot for 24 hours, with up to 10 minutes of grace for a network blip.</p>
+          </div><div class="card card--tile" style="--tone:#4CC9FF">
+            <span class="sigil" aria-hidden="true"><i class="sigil__fill"></i><i class="sigil__edge"></i></span>
+            <div class="i-art i-art--sm"><svg class="il " viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="il-floor" d="M32 44.8 L52 52 L32 59.2 L12 52 Z" pathLength="1" data-pl="1"/><path class="il-floor" d="M24 42.7 L36 47 L24 51.3 L12 47 Z" pathLength="1" data-pl="1"/><path class="il-floor" d="M12 47 L24 51.3 L24 54.3 L12 50 Z" pathLength="1" data-pl="1"/><path class="il-floor" d="M24 51.3 L36 47 L36 50 L24 54.3 Z" pathLength="1" data-pl="1"/><circle class="" cx="24" cy="17" r="7.2" pathLength="1" data-pl="1"/><path d="M11 44 C11 33 17 26.6 24 26.6 31 26.6 37 33 37 44" pathLength="1" data-pl="1"/><rect class="il-key" x="41" y="25" width="15" height="19" rx="2" pathLength="1" data-pl="1"/><path class="il-web" d="M44 32 L53 32" pathLength="1" data-pl="1"/><path class="il-web" d="M44 37 L50 37" pathLength="1" data-pl="1"/><circle class="il-dot" cx="48.5" cy="29" r="1.4" fill="currentColor" stroke="none"/><circle class="il-node" cx="24" cy="8" r="1.6" fill="currentColor" stroke="none"/></svg></div>
+            <h4 class="card__tt">One per person</h4>
+            <p class="card__tx">Each person mines with a capped number of phones. Extra phones earn nothing more.</p>
+          </div>
+      </div></div></div>
+  </section>
+  <section class="section section--panel section--drift " id="fair"
+    data-sec="A fair draw" data-track>
+    
+    <div class="wrap "><div class="reveal" data-arrive>
+    <div class="">
+      <p class="eyebrow">A fair draw</p>
+      <h2 class="d2">Nobody can rig the <strong>random number</strong></h2>
+      
+      
+    </div></div><div class="mt-4"></div><div class="reveal" data-arrive>
+    <blockquote class="quote mx-auto max-60">
+      <p>Think of a raffle where every ticket was printed the day before, and the winning number is drawn by many independent referees who each sign it. Nobody can change a ticket, and nobody can pick the number.</p>
+      <cite>How the draw works</cite>
+    </blockquote></div><div class="mt-4"></div><div class="reveal" data-arrive>
+      <div class="grid g-4 grid--tilt" data-stagger data-marked>
+        
+          <div class="card" style="--tone:#3BE08F">
+            <span class="sigil" aria-hidden="true"><i class="sigil__fill"></i><i class="sigil__edge"></i></span>
+            <div class="i-art "><svg class="il " viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="il-floor" d="M32 43.4 L53 51 L32 58.6 L11 51 Z" pathLength="1" data-pl="1"/><circle class="" cx="19" cy="21" r="6" pathLength="1" data-pl="1"/><path d="M9 42 C9 33.6 13 29 19 29 25 29 29 33.6 29 42" pathLength="1" data-pl="1"/><circle class="il-key" cx="45" cy="25" r="5.2" pathLength="1" data-pl="1"/><path class="il-key" d="M37 43 C37 35.4 40 31.4 45 31.4 50 31.4 53 35.4 53 43" pathLength="1" data-pl="1"/><circle class="il-floor" cx="32" cy="13" r="4" pathLength="1" data-pl="1"/><path class="il-web" d="M19 21 Q32.4 20.4 45 25" pathLength="1" data-pl="1"/><path class="il-web" d="M19 21 Q24.7 15.7 32 13" pathLength="1" data-pl="1"/><path class="il-web" d="M32 13 Q39.7 17.7 45 25" pathLength="1" data-pl="1"/><circle class="il-node" cx="32" cy="13" r="1.5" fill="currentColor" stroke="none"/></svg></div>
+            <h3 class="d5">Made by many, not one</h3>
+            <p class="small mt-1">The number comes from drand, run by the independent operators of the League of Entropy. None of them knows it in advance or can set it alone.</p>
+          </div>
+          <div class="card" style="--tone:#A97BFF">
+            <span class="sigil" aria-hidden="true"><i class="sigil__fill"></i><i class="sigil__edge"></i></span>
+            <div class="i-art "><svg class="il " viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="il-floor" d="M32 45.5 L50 52 L32 58.5 L14 52 Z" pathLength="1" data-pl="1"/><path class="il-floor" d="M32 42.7 L44 47 L32 51.3 L20 47 Z" pathLength="1" data-pl="1"/><path class="il-floor" d="M20 47 L32 51.3 L32 54.5 L20 50.2 Z" pathLength="1" data-pl="1"/><path class="il-floor" d="M32 51.3 L44 47 L44 50.2 L32 54.5 Z" pathLength="1" data-pl="1"/><path d="M32 7 L15 13.6 v13 C15 36.6 22.6 45 32 48.2 41.4 45 49 36.6 49 26.6 V13.6 Z" pathLength="1" data-pl="1"/><path class="il-key" d="M24.8 26 L30.2 31.2 L39.2 20.4" pathLength="1" data-pl="1"/><path class="il-web" d="M11.2 15 A24 24 0 0 1 52.8 15" pathLength="1" data-pl="1"/><circle class="il-dot" cx="11" cy="19" r="1.5" fill="currentColor" stroke="none"/><circle class="il-node" cx="32" cy="4" r="1.9" fill="currentColor" stroke="none"/><circle class="il-dot" cx="53" cy="19" r="1.5" fill="currentColor" stroke="none"/></svg></div>
+            <h3 class="d5">Signed and checked</h3>
+            <p class="small mt-1">Each number is signed. The app holds drand's public key and refuses any number whose signature does not check out.</p>
+          </div>
+          <div class="card" style="--tone:#FFB03A">
+            <span class="sigil" aria-hidden="true"><i class="sigil__fill"></i><i class="sigil__edge"></i></span>
+            <div class="i-art "><svg class="il " viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="il-floor" d="M32 45.5 L50 52 L32 58.5 L14 52 Z" pathLength="1" data-pl="1"/><path class="il-floor" d="M32 42.3 L45 47 L32 51.7 L19 47 Z" pathLength="1" data-pl="1"/><path class="il-floor" d="M19 47 L32 51.7 L32 54.9 L19 50.2 Z" pathLength="1" data-pl="1"/><path class="il-floor" d="M32 51.7 L45 47 L45 50.2 L32 54.9 Z" pathLength="1" data-pl="1"/><rect class="" x="17" y="23" width="30" height="21" rx="3.2" pathLength="1" data-pl="1"/><path class="il-key" d="M23 23 v-6 a9 9 0 0 1 18 0 V23" pathLength="1" data-pl="1"/><circle class="il-key" cx="32" cy="31" r="3.4" pathLength="1" data-pl="1"/><path class="il-key" d="M32 34 L32 38" pathLength="1" data-pl="1"/><path class="il-web" d="M20 23 L20 44" pathLength="1" data-pl="1"/><path class="il-web" d="M44 23 L44 44" pathLength="1" data-pl="1"/><circle class="il-node" cx="32" cy="8" r="1.6" fill="currentColor" stroke="none"/></svg></div>
+            <h3 class="d5">Everything fixed first</h3>
+            <p class="small mt-1">Phone keys, who is eligible and the target are all settled before the number exists, so nothing can be adjusted after seeing it.</p>
+          </div>
+          <div class="card" style="--tone:#4CC9FF">
+            <span class="sigil" aria-hidden="true"><i class="sigil__fill"></i><i class="sigil__edge"></i></span>
+            <div class="i-art "><svg class="il " viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="il-floor" d="M32 45.5 L50 52 L32 58.5 L14 52 Z" pathLength="1" data-pl="1"/><path class="il-floor" d="M32 42.7 L44 47 L32 51.3 L20 47 Z" pathLength="1" data-pl="1"/><path class="il-floor" d="M20 47 L32 51.3 L32 54.5 L20 50.2 Z" pathLength="1" data-pl="1"/><path class="il-floor" d="M32 51.3 L44 47 L44 50.2 L32 54.5 Z" pathLength="1" data-pl="1"/><path class="il-key" d="M32 7 L15 13.6 v13 C15 36.6 22.6 45 32 48.2 41.4 45 49 36.6 49 26.6 V13.6 Z" pathLength="1" data-pl="1"/><path class="il-web" d="M21 31 L32 20" pathLength="1" data-pl="1"/><path class="il-web" d="M26 38 L43 21" pathLength="1" data-pl="1"/><path class="il-web" d="M32 43 L46 29" pathLength="1" data-pl="1"/><path class="il-web" d="M18 24 L24 18" pathLength="1" data-pl="1"/><circle class="il-node" cx="32" cy="7" r="1.6" fill="currentColor" stroke="none"/></svg></div>
+            <h3 class="d5">No backdoor</h3>
+            <p class="small mt-1">If drand ever stopped, mining would simply pause. It never switches to a number a person picks.</p>
+          </div>
+      </div></div></div>
+  </section>
+  <section class="section section--drift " id="work"
+    data-sec="Proof of contribution" data-track>
+    
+    <div class="wrap "><div class="reveal" data-arrive>
+    <div class="">
+      <p class="eyebrow">Proof of contribution</p>
+      <h2 class="d2">Doing the work earns a <strong>second ticket</strong></h2>
+      <p class="lede">Uptime earns a phone its ticket. A phone that answers 95% or more of the signing work it is asked for over 7 days gets one extra ticket each round. Never more than two.</p>
+      
+    </div></div><div class="mt-4"></div><div class="reveal" data-arrive>
+    
+    <div class="grid g-2" data-stagger data-marked>
+      <div class="card " style="--tone:#3BE08F">
+    <span class="sigil" aria-hidden="true"><i class="sigil__fill"></i><i class="sigil__edge"></i></span>
+    <div class="i-art "><svg class="il " viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="il-floor" d="M32 45.5 L50 52 L32 58.5 L14 52 Z" pathLength="1" data-pl="1"/><path class="il-floor" d="M32 43 L43 47 L32 51 L21 47 Z" pathLength="1" data-pl="1"/><path class="il-floor" d="M21 47 L32 51 L32 54 L21 50 Z" pathLength="1" data-pl="1"/><path class="il-floor" d="M32 51 L43 47 L43 50 L32 54 Z" pathLength="1" data-pl="1"/><circle class="" cx="32" cy="25" r="16.4" pathLength="1" data-pl="1"/><path class="il-key" d="M24.4 25 L30.1 30.5 L39.6 19.1" pathLength="1" data-pl="1"/><path class="il-pulse" d="M13.1 17.4 A20.4 20.4 0 0 1 50.9 17.4" pathLength="1" data-pl="1"/><circle class="il-node" cx="32" cy="5" r="1.7" fill="currentColor" stroke="none"/></svg></div>
+    
+    <h3 class="d5">Counts</h3>
+    
+    <ul class="bullets mt-1"><li>Answering a signing round on time</li><li>Correctly refusing a bad request</li><li>Helping make a new vault's key</li><li>Later: vouching for fellow nodes' heartbeats</li></ul>
+    
+    </div><div class="card " style="--tone:#A97BFF">
+    <span class="sigil" aria-hidden="true"><i class="sigil__fill"></i><i class="sigil__edge"></i></span>
+    <div class="i-art "><svg class="il " viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="il-floor" d="M32 42.8 L52 50 L32 57.2 L12 50 Z" pathLength="1" data-pl="1"/><path class="" d="M32 9 L32 42" pathLength="1" data-pl="1"/><path class="il-key" d="M21 43 L43 43" pathLength="1" data-pl="1"/><path class="il-floor" d="M32 42 L43 46 L32 50 L21 46 Z" pathLength="1" data-pl="1"/><path class="il-floor" d="M21 46 L32 50 L32 53 L21 49 Z" pathLength="1" data-pl="1"/><path class="il-floor" d="M32 50 L43 46 L43 49 L32 53 Z" pathLength="1" data-pl="1"/><path class="il-key" d="M10 17 L54 17" pathLength="1" data-pl="1"/><path d="M10 17 L16 31 H4 Z" pathLength="1" data-pl="1"/><path d="M54 17 L60 31 H48 Z" pathLength="1" data-pl="1"/><path class="il-web" d="M24.5 14.3 A8 8 0 0 1 39.5 14.3" pathLength="1" data-pl="1"/><circle class="il-node" cx="32" cy="9" r="1.7" fill="currentColor" stroke="none"/></svg></div>
+    
+    <h3 class="d5">Never counts</h3>
+    
+    <ul class="bullets mt-1"><li>Approving a payment. A node paid per signature would be paid to say yes, the opposite of what keeps vaults safe.</li><li>A refusal of a bad request scores exactly the same as a signature on a good one.</li></ul>
+    
+    </div>
+    </div></div></div>
+  </section>
+  <section class="section section--tint section--drift " id="supply"
+    data-sec="Supply" data-track>
+    
+    <div class="wrap "><div class="reveal" data-arrive>
+    <div class="">
+      <p class="eyebrow">Supply</p>
+      <h2 class="d2">Built like <strong>Bitcoin</strong></h2>
+      <p class="lede">$Q follows Bitcoin's schedule. The $Q mined per round halves every 210,000 rounds, about every 4 years. The first era mines half of all $Q, each era after it half of the one before, approaching 50,000,000 and never passing it.</p>
+      
+    </div></div><div class="mt-4"></div><div class="reveal" data-arrive>
+    
+    <div class="stats g-4">
+      
+        <div class="stat">
+          <div class="stat__v"><span class="count" data-count="50,000,000">50,000,000</span></div>
+          <div class="stat__k">$Q ever</div>
+          <div class="stat__n">a fixed cap</div>
+        </div>
+        <div class="stat">
+          <div class="stat__v"><span class="count" data-count="10 minutes">10 minutes</span></div>
+          <div class="stat__k">per round</div>
+          <div class="stat__n">like a Bitcoin block</div>
+        </div>
+        <div class="stat">
+          <div class="stat__v"><span class="count" data-count="4 years">4 years</span></div>
+          <div class="stat__k">between halvings</div>
+          <div class="stat__n">every 210,000 rounds</div>
+        </div>
+        <div class="stat">
+          <div class="stat__v"><span class="count" data-count="1,000">1,000</span></div>
+          <div class="stat__k">nodes to start</div>
+          <div class="stat__n">before the first round runs</div>
+        </div>
+    </div></div><div class="mt-4"></div><div class="reveal" data-arrive>
+<style>
+  .qm-chart { position: relative; background: #FFFFFF; border: 1px solid var(--line); border-radius: 16px; padding: 22px 22px 12px; }
+  .qm-chart h3 { margin: 0 0 6px; }
+  .qm-chart svg { display: block; width: 100%; height: auto; touch-action: pan-y; }
+  .qm-tip { position: absolute; pointer-events: none; background: #FFFFFF; color: var(--ink); border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; font-size: 13px; line-height: 1.45; box-shadow: 0 10px 30px rgba(7, 26, 77, .12); white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .qm-tip b { display: block; color: var(--ink); }
+</style>
+<div class="qm-chart">
+  <h3 class="d5">Total $Q mined over the first 40 years</h3>
+  <div style="position:relative">
+    <svg id="qm-supply" viewBox="0 0 720 320" role="img" font-family="Inter, -apple-system, 'Segoe UI', system-ui, sans-serif"
+         aria-label="Total $Q mined rises to 25 million by year 4, 37.5 million by year 8 and about 48.4 million by year 20, approaching the 50 million cap."></svg>
+    <div class="qm-tip" id="qm-tip" hidden></div>
+  </div>
+</div>
 <script>
 (function () {
-  var svg = document.getElementById('supply-svg');
-  var tip = document.getElementById('tip');
-  var NS = 'http://www.w3.org/2000/svg';
-  var X0 = 64, X1 = 700, Y0 = 24, Y1 = 272, YEARS = 40, CAP = 50000000;
-  function total(t) {
-    var k = Math.min(Math.floor(t / 4), 60);
-    var before = CAP * (1 - Math.pow(2, -k));
-    return before + ((t - 4 * k) / 4) * (CAP / 2) * Math.pow(2, -k);
-  }
+  var svg = document.getElementById('qm-supply'), tip = document.getElementById('qm-tip');
+  if (!svg) return;
+  var NS = 'http://www.w3.org/2000/svg', X0 = 64, X1 = 700, Y0 = 24, Y1 = 272, YEARS = 40, CAP = 50000000;
+  function total(t) { var k = Math.min(Math.floor(t / 4), 60); return CAP * (1 - Math.pow(2, -k)) + ((t - 4 * k) / 4) * (CAP / 2) * Math.pow(2, -k); }
   function x(t) { return X0 + (t / YEARS) * (X1 - X0); }
   function y(v) { return Y1 - (v / CAP) * (Y1 - Y0); }
-  function el(name, attrs, text) {
-    var e = document.createElementNS(NS, name);
-    for (var a in attrs) e.setAttribute(a, attrs[a]);
-    if (text !== undefined) e.textContent = text;
-    svg.appendChild(e);
-    return e;
-  }
+  function el(n, a, t) { var e = document.createElementNS(NS, n); for (var k in a) e.setAttribute(k, a[k]); if (t !== undefined) e.textContent = t; svg.appendChild(e); return e; }
   for (var m = 0; m <= 50; m += 10) {
-    el('line', { x1: X0, x2: X1, y1: y(m * 1e6), y2: y(m * 1e6), 'class': 'grid-line' });
-    el('text', { x: X0 - 10, y: y(m * 1e6) + 4, 'text-anchor': 'end', 'class': 'axis-text' }, m === 0 ? '0' : m + 'M');
+    el('line', { x1: X0, x2: X1, y1: y(m * 1e6), y2: y(m * 1e6), stroke: '#E5E9F0' });
+    el('text', { x: X0 - 10, y: y(m * 1e6) + 4, 'text-anchor': 'end', 'font-size': 12, fill: '#878D98' }, m ? m + 'M' : '0');
   }
-  for (var h = 4; h < YEARS; h += 4) el('line', { x1: x(h), x2: x(h), y1: Y0, y2: Y1, 'class': 'halving' });
-  for (var tk = 0; tk <= YEARS; tk += 4) el('text', { x: x(tk), y: Y1 + 20, 'text-anchor': 'middle', 'class': 'axis-text' }, String(tk));
-  el('text', { x: (X0 + X1) / 2, y: Y1 + 42, 'text-anchor': 'middle', 'class': 'axis-text' }, 'Years after mining starts (dashed lines are halvings)');
-  var pts = [];
-  for (var t = 0; t <= YEARS + 1e-9; t += 0.25) pts.push([x(t), y(total(t))]);
-  var line = pts.map(function (p, i) { return (i ? 'L' : 'M') + p[0].toFixed(1) + ' ' + p[1].toFixed(1); }).join('');
-  el('path', { d: line + 'L' + x(YEARS) + ' ' + Y1 + 'L' + X0 + ' ' + Y1 + 'Z', 'class': 'area' });
-  el('path', { d: line, 'class': 'curve' });
+  for (var h = 4; h < YEARS; h += 4) el('line', { x1: x(h), x2: x(h), y1: Y0, y2: Y1, stroke: '#CFE0FB', 'stroke-dasharray': '3 4' });
+  for (var tk = 0; tk <= YEARS; tk += 4) el('text', { x: x(tk), y: Y1 + 20, 'text-anchor': 'middle', 'font-size': 12, fill: '#878D98' }, String(tk));
+  el('text', { x: (X0 + X1) / 2, y: Y1 + 42, 'text-anchor': 'middle', 'font-size': 12, fill: '#878D98' }, 'Years after mining starts (dashed lines are halvings)');
+  var pts = []; for (var t = 0; t <= YEARS + 1e-9; t += 0.25) pts.push([x(t), y(total(t))]);
+  var d = pts.map(function (p, i) { return (i ? 'L' : 'M') + p[0].toFixed(1) + ' ' + p[1].toFixed(1); }).join('');
+  el('path', { d: d + 'L' + x(YEARS) + ' ' + Y1 + 'L' + X0 + ' ' + Y1 + 'Z', fill: 'rgba(21, 87, 255, 0.08)' });
+  el('path', { d: d, fill: 'none', stroke: '#1557FF', 'stroke-width': 2, 'stroke-linejoin': 'round' });
   [[4, '50% by year 4'], [8, '75% by year 8'], [20, '97% by year 20']].forEach(function (n) {
-    var px = x(n[0]), py = y(total(n[0]));
-    el('circle', { cx: px, cy: py, r: 4.5, 'class': 'point' });
-    el('text', { x: px + 10, y: py + 18, 'class': 'note' }, n[1]);
+    el('circle', { cx: x(n[0]), cy: y(total(n[0])), r: 4.5, fill: '#1557FF', stroke: '#FFFFFF', 'stroke-width': 2 });
+    el('text', { x: x(n[0]) + 10, y: y(total(n[0])) + 18, 'font-size': 12.5, 'font-weight': 600, fill: '#071018' }, n[1]);
   });
-  var cross = el('line', { x1: 0, x2: 0, y1: Y0, y2: Y1, 'class': 'cross', visibility: 'hidden' });
-  var dot = el('circle', { cx: 0, cy: 0, r: 5, 'class': 'point', visibility: 'hidden' });
+  var cross = el('line', { x1: 0, x2: 0, y1: Y0, y2: Y1, stroke: '#9CBDF8', visibility: 'hidden' });
+  var dot = el('circle', { r: 5, fill: '#1557FF', stroke: '#FFFFFF', 'stroke-width': 2, visibility: 'hidden' });
   var hit = el('rect', { x: X0, y: Y0, width: X1 - X0, height: Y1 - Y0, fill: 'transparent' });
-  function fmt(v) { return Math.round(v).toLocaleString('en-US'); }
-  function show(evt) {
-    var r = svg.getBoundingClientRect();
-    var sx = (evt.clientX - r.left) * (720 / r.width);
-    var t = Math.max(0, Math.min(YEARS, ((sx - X0) / (X1 - X0)) * YEARS));
-    t = Math.round(t * 4) / 4;
+  function show(e) {
+    var r = svg.getBoundingClientRect(), sx = (e.clientX - r.left) * (720 / r.width);
+    var t = Math.round(Math.max(0, Math.min(YEARS, ((sx - X0) / (X1 - X0)) * YEARS)) * 4) / 4;
     var v = total(t), era = Math.min(Math.floor(t / 4) + 1, 10);
     cross.setAttribute('x1', x(t)); cross.setAttribute('x2', x(t)); cross.setAttribute('visibility', 'visible');
     dot.setAttribute('cx', x(t)); dot.setAttribute('cy', y(v)); dot.setAttribute('visibility', 'visible');
-    tip.innerHTML = '<strong>Year ' + t.toFixed(t % 1 ? 2 : 0) + '</strong>' + fmt(v) + ' $Q mined<br>' + (v / CAP * 100).toFixed(1) + '% of the cap, era ' + era;
+    tip.innerHTML = '<b>Year ' + (t % 1 ? t.toFixed(2) : t) + '</b>' + Math.round(v).toLocaleString('en-US') + ' $Q mined<br>' + (v / CAP * 100).toFixed(1) + '% of the cap, era ' + era;
     tip.hidden = false;
-    var px = (x(t) / 720) * r.width, py = (y(v) / 320) * r.height;
-    var w = tip.offsetWidth;
+    var px = (x(t) / 720) * r.width, py = (y(v) / 320) * r.height, w = tip.offsetWidth;
     tip.style.left = Math.max(0, Math.min(r.width - w, px + 14 > r.width - w ? px - w - 14 : px + 14)) + 'px';
     tip.style.top = Math.max(0, py - 56) + 'px';
   }
   function hide() { tip.hidden = true; cross.setAttribute('visibility', 'hidden'); dot.setAttribute('visibility', 'hidden'); }
-  hit.addEventListener('pointermove', show);
-  hit.addEventListener('pointerdown', show);
-  hit.addEventListener('pointerleave', hide);
+  hit.addEventListener('pointermove', show); hit.addEventListener('pointerdown', show); hit.addEventListener('pointerleave', hide);
 })();
-</script>
+</script></div><div class="mt-4"></div><div class="reveal" data-arrive>
+    <div class="rule-label"><span>The eras</span></div>
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr><th>Era</th><th>Years</th><th>Mined in the era</th><th>Total mined</th><th>Winners per round</th></tr></thead>
+        <tbody><tr class=""><td data-label="Era">1</td><td data-label="Years">0 to 4</td><td data-label="Mined in the era">25,000,000</td><td data-label="Total mined">25,000,000 (50%)</td><td data-label="Winners per round">about 119</td></tr><tr class=""><td data-label="Era">2</td><td data-label="Years">4 to 8</td><td data-label="Mined in the era">12,500,000</td><td data-label="Total mined">37,500,000 (75%)</td><td data-label="Winners per round">about 60</td></tr><tr class=""><td data-label="Era">3</td><td data-label="Years">8 to 12</td><td data-label="Mined in the era">6,250,000</td><td data-label="Total mined">43,750,000 (87.5%)</td><td data-label="Winners per round">about 30</td></tr><tr class=""><td data-label="Era">4</td><td data-label="Years">12 to 16</td><td data-label="Mined in the era">3,125,000</td><td data-label="Total mined">46,875,000 (94%)</td><td data-label="Winners per round">about 15</td></tr><tr class=""><td data-label="Era">5</td><td data-label="Years">16 to 20</td><td data-label="Mined in the era">1,562,500</td><td data-label="Total mined">48,437,500 (97%)</td><td data-label="Winners per round">about 7</td></tr><tr class=""><td data-label="Era">6</td><td data-label="Years">20 to 24</td><td data-label="Mined in the era">781,250</td><td data-label="Total mined">49,218,750 (98.4%)</td><td data-label="Winners per round">about 4</td></tr><tr class=""><td data-label="Era">10</td><td data-label="Years">36 to 40</td><td data-label="Mined in the era">48,828</td><td data-label="Total mined">49,951,172 (99.9%)</td><td data-label="Winners per round">about 0.2</td></tr></tbody>
+      </table>
+    </div></div><div class="mt-4"></div><div class="reveal" data-arrive><div class="prose"><p>Mining starts only once <strong>1,000 licensed nodes</strong> are online, so the richest first era is shared widely instead of going to a handful of early phones.</p></div></div></div>
+  </section>
+  <section class="section section--drift " id="rollout"
+    data-sec="Rollout" data-track>
+    
+    <div class="wrap "><div class="reveal" data-arrive>
+    <div class="">
+      <p class="eyebrow">Rollout</p>
+      <h2 class="d2">Step by step, <strong>on the test network first</strong></h2>
+      
+      
+    </div></div><div class="mt-4"></div><div class="reveal" data-arrive>
+    <div class="rule-label"><span>Rollout</span></div>
+    
+    
+    <div class="rail "
+         data-cols="4">
+      
+      <span class="rail__line" aria-hidden="true"><i></i></span>
+      <ol class="rail__items" style="--n:6">
+        
+          <li class="rail__item" style="--i:0">
+            
+            <span class="rail__node rail__node--n">
+              <i class="rail__ping" aria-hidden="true"></i>
+              <span class="rail__big">01</span>
+            </span>
+            <h4>Three phone trial</h4>
+            <p>Phones sign Palm payments for real. No mining yet.</p>
+          </li>
+          <li class="rail__item" style="--i:1">
+            
+            <span class="rail__node rail__node--n">
+              <i class="rail__ping" aria-hidden="true"></i>
+              <span class="rail__big">02</span>
+            </span>
+            <h4>Heartbeats only</h4>
+            <p>The app sends heartbeats and shows how long the phone has been online.</p>
+          </li>
+          <li class="rail__item" style="--i:2">
+            
+            <span class="rail__node rail__node--n">
+              <i class="rail__ping" aria-hidden="true"></i>
+              <span class="rail__big">03</span>
+            </span>
+            <h4>$Q as points</h4>
+            <p>Draws run and wins are credited as $Q that cannot be transferred, once 1,000 nodes are online.</p>
+          </li>
+          <li class="rail__item" style="--i:3">
+            
+            <span class="rail__node rail__node--n">
+              <i class="rail__ping" aria-hidden="true"></i>
+              <span class="rail__big">04</span>
+            </span>
+            <h4>Second ticket on</h4>
+            <p>The extra ticket for phones that do their signing work.</p>
+          </li>
+          <li class="rail__item" style="--i:4">
+            
+            <span class="rail__node rail__node--n">
+              <i class="rail__ping" aria-hidden="true"></i>
+              <span class="rail__big">05</span>
+            </span>
+            <h4>Checked on chain</h4>
+            <p>A program on QuFi's Solana network checks every claim.</p>
+          </li>
+          <li class="rail__item" style="--i:5">
+            
+            <span class="rail__node rail__node--n">
+              <i class="rail__ping" aria-hidden="true"></i>
+              <span class="rail__big">06</span>
+            </span>
+            <h4>Transfers, only if approved</h4>
+            <p>Only after legal review in each launch country.</p>
+          </li>
+      </ol>
+    </div></div><div class="mt-4"></div><div class="reveal" data-arrive><div class="prose"><p>Planned design, November 2026. Details may change before launch. $Q cannot be transferred at launch; any change to that needs legal review in each launch country first. Figures describe the planned schedule, not a promise of any reward.</p></div></div></div>
+  </section>
+</main>
+<div class="grain" aria-hidden="true"></div>
+<footer class="site-foot" data-track>
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="foot-top__lead">
+        
+        <a class="foot-brand" href="https://qufi.network/" aria-label="QuFi Network home">
+          <img src="assets/img/qicon-sm.png" alt="" width="96" height="96">
+        </a>
+        <div>
+          <p class="d4">The verification layer for the post-quantum economy.</p>
+          <p class="small mt-1">Quantum-resistant verification across assets, identities and transactions, without changing the networks you already settle on.</p>
+        </div>
+      </div>
+      <div class="foot-top__act">
+        <p class="foot-top__tag">Trust<br>Beyond<br>Tomorrow</p>
+        <div class="row">
+          <a class="btn btn--solid" href="https://qufi.network/whitepaper.html">Technical paper <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M4.6 12h14.8" pathLength="1" data-pl="1"/><path d="m14.2 6.8 5.2 5.2-5.2 5.2" pathLength="1" data-pl="1"/><g class="qf-field"><path class="qf-link" d="M1.6 25.2 L-3.2 19.4 L-4.2 13.6" stroke-width=".85" opacity=".38" pathLength="1"/><circle cx="-3.2" cy="19.4" r="1.6" fill="currentColor" stroke="none" class="qf-node" opacity=".9"/><circle cx="1.6" cy="25.2" r="0.85" fill="currentColor" stroke="none" class="qf-dot" opacity=".45"/><circle cx="-4.2" cy="13.6" r="0.85" fill="currentColor" stroke="none" class="qf-dot" opacity=".45"/></g></svg></a>
+          <a class="btn btn--ghost" href="https://qufi.network/api.html">Developer APIs <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="m9.2 8.4-4.4 3.6 4.4 3.6M14.8 8.4l4.4 3.6-4.4 3.6" pathLength="1" data-pl="1"/><g class="qf-field"><path class="qf-link" d="M1.2 -1.8 L-3 3 L-4 8.6" stroke-width=".85" opacity=".38" pathLength="1"/><circle cx="-3" cy="3" r="1.6" fill="currentColor" stroke="none" class="qf-node" opacity=".9"/><circle cx="1.2" cy="-1.8" r="0.85" fill="currentColor" stroke="none" class="qf-dot" opacity=".45"/><circle cx="-4" cy="8.6" r="0.85" fill="currentColor" stroke="none" class="qf-dot" opacity=".45"/></g></svg></a>
+        </div>
+      </div>
+    </div>
+
+    <nav class="sitemap" aria-label="Site map">
+      <div>
+        <h3><a href="https://qufi.network/protocol.html">Protocol</a></h3>
+        <ul>
+          <li><a href="https://qufi.network/thesis.html">The QuFi thesis</a></li>
+          <li><a href="https://qufi.network/verification-gap.html">The verification gap</a></li>
+          <li><a href="https://qufi.network/fragmented-trust.html">Fragmented trust</a></li>
+          <li><a href="https://qufi.network/verification-before-settlement.html">Verification before settlement</a></li>
+          <li><a href="https://qufi.network/global-impact.html">Global impact</a></li>
+          <li><a href="https://qufi.network/conclusion.html">Conclusion and vision</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3><a href="https://qufi.network/technology.html">Technology</a></h3>
+        <ul>
+          <li><a href="https://qufi.network/architecture.html">Architecture</a></li>
+          <li><a href="https://qufi.network/cryptography.html">Cryptography</a></li>
+          <li><a href="https://qufi.network/verification-flow.html">Verification flow</a></li>
+          <li><a href="https://qufi.network/signing-attestation.html">Signing and attestation</a></li>
+          <li><a href="https://qufi.network/evidence-model.html">Evidence model</a></li>
+          <li><a href="https://qufi.network/data-layer.html">Data layer and storage</a></li>
+          <li><a href="https://qufi.network/key-management.html">Key management</a></li>
+          <li><a href="https://qufi.network/security-model.html">Security model</a></li>
+          <li><a href="https://qufi.network/hardware.html">Hardware and devices</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3><a href="https://qufi.network/technology.html">Programmable trust</a></h3>
+        <ul>
+          <li><a href="https://qufi.network/programmable-trust.html">Programmable trust</a></li>
+          <li><a href="https://qufi.network/qpl.html">QPL language</a></li>
+          <li><a href="https://qufi.network/qos.html">QOS runtime</a></li>
+          <li><a href="https://qufi.network/deterministic-execution.html">Deterministic execution</a></li>
+          <li><a href="https://qufi.network/policy-engine.html">Policy engine</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3><a href="https://qufi.network/network.html">Network</a></h3>
+        <ul>
+          <li><a href="https://qufi.network/verification-network.html">The verification network</a></li>
+          <li><a href="https://qufi.network/nodes.html">Verification nodes</a></li>
+          <li><a href="https://qufi.network/node-communication.html">Node communication</a></li>
+          <li><a href="https://qufi.network/consensus.html">Consensus and finality</a></li>
+          <li><a href="https://qufi.network/performance.html">Performance and scalability</a></li>
+          <li><a href="https://qufi.network/economics.html">Network economics</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3><a href="https://qufi.network/applications.html">Applications &amp; developers</a></h3>
+        <ul>
+          <li><a href="https://qufi.network/use-cases.html">Use cases</a></li>
+          <li><a href="https://qufi.network/financial-verification.html">Financial verification</a></li>
+          <li><a href="https://qufi.network/quvault.html">QuVault</a></li>
+          <li><a href="https://qufi.network/qusettle.html">QuSettle</a></li>
+          <li><a href="https://qufi.network/qufi-verify.html">QuFi Verify</a></li>
+          <li><a href="https://qufi.network/integration.html">Integration architecture</a></li>
+          <li><a href="https://qufi.network/interoperability.html">Chain agnostic verification</a></li>
+          <li><a href="https://qufi.network/settlement-integration.html">Settlement integration</a></li>
+          <li><a href="https://qufi.network/api.html">APIs and SDKs</a></li>
+          
+        </ul>
+      </div>
+    </nav>
+
+    <div class="foot-base">
+      <p>&copy; 2026 QuFi Network LTD</p>
+      <p>Assets &nbsp;·&nbsp; Identities &nbsp;·&nbsp; Transactions &nbsp;·&nbsp; Supply chains &nbsp;·&nbsp; Global commerce</p>
+      <div class="foot-end">
+        <ul class="foot-social" aria-label="QuFi on social media">
+          <li><a href="https://www.linkedin.com/company/qufi-network"
+            target="_blank" rel="noopener noreferrer"
+            aria-label="QuFi on LinkedIn" title="LinkedIn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M4.5 3.4h15a1.1 1.1 0 0 1 1.1 1.1v15a1.1 1.1 0 0 1-1.1 1.1h-15a1.1 1.1 0 0 1-1.1-1.1v-15A1.1 1.1 0 0 1 4.5 3.4Zm2.2 5.9h2.6v8.4H6.7V9.3Zm1.3-1.1a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3Zm3.2 1.1h2.5v1.15a2.8 2.8 0 0 1 2.5-1.35c1.9 0 3.1 1.25 3.1 3.5v5.1h-2.6v-4.6c0-1.1-.4-1.85-1.4-1.85-.85 0-1.35.57-1.57 1.13-.08.2-.1.48-.1.76v4.56h-2.6c.03-7.4 0-8.4 0-8.4Z" fill="currentColor" stroke="none"/><g class="qf-field"><path class="qf-link" d="M23 25.4 L27.2 20 L29.2 14.4" stroke-width=".85" opacity=".38" pathLength="1"/><circle cx="27.2" cy="20" r="1.6" fill="currentColor" stroke="none" class="qf-node" opacity=".9"/><circle cx="23" cy="25.4" r="0.85" fill="currentColor" stroke="none" class="qf-dot" opacity=".45"/><circle cx="29.2" cy="14.4" r="0.85" fill="currentColor" stroke="none" class="qf-dot" opacity=".45"/></g></svg></a></li><li><a href="https://x.com/qufinetwork"
+            target="_blank" rel="noopener noreferrer"
+            aria-label="QuFi on X" title="X"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M17.2 3.6h3.1l-6.77 7.74 7.97 10.55h-6.25l-4.9-6.4-5.6 6.4H1.64l7.24-8.28L1.24 3.6h6.4l4.57 6.04L17.2 3.6Zm-1.1 16.4h1.73L6.02 5.4H4.17l11.93 14.6Z" fill="currentColor" stroke="none"/><g class="qf-field"><path class="qf-link" d="M23.4 -1.8 L27 2.6 L28.8 8" stroke-width=".85" opacity=".38" pathLength="1"/><circle cx="27" cy="2.6" r="1.6" fill="currentColor" stroke="none" class="qf-node" opacity=".9"/><circle cx="23.4" cy="-1.8" r="0.85" fill="currentColor" stroke="none" class="qf-dot" opacity=".45"/><circle cx="28.8" cy="8" r="0.85" fill="currentColor" stroke="none" class="qf-dot" opacity=".45"/></g></svg></a></li><li><a href="https://www.instagram.com/qufinetwork"
+            target="_blank" rel="noopener noreferrer"
+            aria-label="QuFi on Instagram" title="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M8.1 2.6h7.8a5.5 5.5 0 0 1 5.5 5.5v7.8a5.5 5.5 0 0 1-5.5 5.5H8.1a5.5 5.5 0 0 1-5.5-5.5V8.1a5.5 5.5 0 0 1 5.5-5.5Zm0 2a3.5 3.5 0 0 0-3.5 3.5v7.8a3.5 3.5 0 0 0 3.5 3.5h7.8a3.5 3.5 0 0 0 3.5-3.5V8.1a3.5 3.5 0 0 0-3.5-3.5H8.1Zm3.9 2.7a4.7 4.7 0 1 1 0 9.4 4.7 4.7 0 0 1 0-9.4Zm0 2a2.7 2.7 0 1 0 0 5.4 2.7 2.7 0 0 0 0-5.4Zm5.15-2.6a1.15 1.15 0 1 1 0 2.3 1.15 1.15 0 0 1 0-2.3Z" fill="currentColor" stroke="none"/><g class="qf-field"><path class="qf-link" d="M23 25.4 L27.2 20 L29.2 14.4" stroke-width=".85" opacity=".38" pathLength="1"/><circle cx="27.2" cy="20" r="1.6" fill="currentColor" stroke="none" class="qf-node" opacity=".9"/><circle cx="23" cy="25.4" r="0.85" fill="currentColor" stroke="none" class="qf-dot" opacity=".45"/><circle cx="29.2" cy="14.4" r="0.85" fill="currentColor" stroke="none" class="qf-dot" opacity=".45"/></g></svg></a></li><li><a href="https://www.youtube.com/@qufinetwork"
+            target="_blank" rel="noopener noreferrer"
+            aria-label="QuFi on YouTube" title="YouTube"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M21.2 7.4a2.6 2.6 0 0 0-1.83-1.85C17.75 5.1 12 5.1 12 5.1s-5.75 0-7.37.45A2.6 2.6 0 0 0 2.8 7.4C2.36 9.05 2.36 12 2.36 12s0 2.95.44 4.6a2.6 2.6 0 0 0 1.83 1.85c1.62.45 7.37.45 7.37.45s5.75 0 7.37-.45a2.6 2.6 0 0 0 1.83-1.85c.44-1.65.44-4.6.44-4.6s0-2.95-.44-4.6ZM10.15 15.2V8.8L15.6 12l-5.45 3.2Z" fill="currentColor" stroke="none"/><g class="qf-field"><path class="qf-link" d="M1.6 25.2 L-3.2 19.4 L-4.2 13.6" stroke-width=".85" opacity=".38" pathLength="1"/><circle cx="-3.2" cy="19.4" r="1.6" fill="currentColor" stroke="none" class="qf-node" opacity=".9"/><circle cx="1.6" cy="25.2" r="0.85" fill="currentColor" stroke="none" class="qf-dot" opacity=".45"/><circle cx="-4.2" cy="13.6" r="0.85" fill="currentColor" stroke="none" class="qf-dot" opacity=".45"/></g></svg></a></li>
+        </ul>
+        <p class="foot-legal">
+          <a href="https://qufi.network/privacy.html">Privacy Policy</a>
+          <span aria-hidden="true">&nbsp;·&nbsp;</span>qufi.network
+        </p>
+      </div>
+    </div>
+  </div>
+</footer>
+<script src="assets/js/qufi-landmask.js" defer></script>
+<script src="assets/js/qufi-gl.js" defer></script>
+<script src="assets/js/qufi.js" defer></script>
 </body>
 </html>

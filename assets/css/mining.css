@@ -1,0 +1,88 @@
+/* The $Q mining page. Everything else on the page is qufi.network's own
+   stylesheet (qufi.css); this file only adds the clean white surface and the
+   node phones that sit on the home hero's rings.
+
+   Frame zero is complete: one phone is already lit with its +1 $Q and its
+   beam. The cycle runs only under html.anim, which qufi.js sets after it has
+   seen a real animation frame, so a host that never paints one still shows
+   the whole scene. */
+
+:root { --page: #FFFFFF; }
+.site-head,
+.site-head.is-scrolled { background: rgba(255, 255, 255, .9); }
+.hero--mine { background: #FFFFFF; }
+
+/* the site's display size, held to two lines for this longer headline */
+.hero--mine .d1 { font-size: clamp(2.6rem, 5vw, 4.4rem); }
+
+/* the Q gives up some width so the phones on the outer ring have room */
+.hero--mine .hero__q { width: 58%; }
+
+.mine {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+.mine--under { z-index: 2; }
+.mine--over { z-index: 4; }
+
+.mine__w,
+.mine__beam { opacity: 0; }
+.mine__w.is-on,
+.mine__beam.is-on { opacity: 1; }
+
+@media (prefers-reduced-motion: no-preference) {
+  /* one round: the inner ring fills, then a draw */
+  html.anim .mine__round { animation: mine-round 3s linear infinite; }
+
+  /* eight phones, one draw each per 24s cycle, in the order set by --s */
+  html.anim .mine__w,
+  html.anim .mine__beam,
+  html.anim .mine__coin {
+    animation-duration: 24s;
+    animation-iteration-count: infinite;
+    animation-fill-mode: both;
+    animation-timing-function: ease-out;
+    animation-delay: calc(var(--s) * 3s);
+  }
+  html.anim .mine__beam { animation-name: mine-beam; }
+  html.anim .mine__coin { animation-name: mine-coin; }
+  html.anim .mine__w { animation-name: mine-win; }
+
+  html.anim .mine__ping {
+    transform-box: fill-box; transform-origin: center;
+    animation: mine-ping 2.4s ease-out infinite;
+    animation-delay: calc(var(--o) * -.3s);
+  }
+  html.anim .mine__tick { animation: mine-tick 3s ease-out infinite; }
+}
+
+@keyframes mine-round {
+  from { stroke-dashoffset: 1319.5; }
+  to { stroke-dashoffset: 0; }
+}
+@keyframes mine-beam {
+  0% { opacity: 0; }
+  1.2%, 7.5% { opacity: 1; }
+  10.5%, 100% { opacity: 0; }
+}
+@keyframes mine-coin {
+  0% { opacity: 0; transform: translateX(0); }
+  1% { opacity: 1; }
+  5.5% { opacity: 1; transform: translateX(78px); }
+  6.6%, 100% { opacity: 0; transform: translateX(82px); }
+}
+@keyframes mine-win {
+  0%, 5.4% { opacity: 0; }
+  6.4%, 11% { opacity: 1; }
+  12.5%, 100% { opacity: 0; }
+}
+@keyframes mine-ping {
+  0% { transform: scale(.6); opacity: .32; }
+  70%, 100% { transform: scale(2.1); opacity: 0; }
+}
+@keyframes mine-tick {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .35; }
+}
