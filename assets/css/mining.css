@@ -12,6 +12,9 @@
 .site-head.is-scrolled { background: rgba(255, 255, 255, .9); }
 .hero--mine { background: #FFFFFF; }
 
+/* the page has no site navigation, only this one button across to qufi.network */
+.site-head__go { margin-left: auto; }
+
 /* the site's display size, held to two lines for this longer headline */
 .hero--mine .d1 { font-size: clamp(2.6rem, 5vw, 4.4rem); }
 

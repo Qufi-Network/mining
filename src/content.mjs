@@ -72,7 +72,6 @@ const hero = `<section class="hero hero--mine">
         <p class="hero__note">Every licensed phone that keeps the QuFi node network running gets one ticket in a public draw. No mining rigs and no wasted power, and nobody, QuFi included, can predict or change the result.</p>
         <div class="hero__cta">
           <a class="btn btn--solid" href="#how">How it works ${icon('next')}</a>
-          <a class="btn btn--ghost" href="whitepaper.html">Technical paper ${icon('doc')}</a>
         </div>
         <dl class="hero__facts">
           <div><dt>50,000,000</dt><dd>$Q, a fixed cap</dd></div>
