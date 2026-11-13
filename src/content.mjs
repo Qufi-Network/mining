@@ -332,23 +332,5 @@ export const mining = {
         { type: 'text', body: ['Mining starts only once **1,000 licensed nodes** are online, so the richest first era is shared widely instead of going to a handful of early phones.'] },
       ],
     },
-    {
-      id: 'rollout', nav: 'Rollout',
-      blocks: [
-        { type: 'head', eyebrow: 'Rollout', title: 'Step by step, **on the test network first**' },
-        {
-          type: 'rail', label: 'Rollout',
-          items: [
-            { title: 'Three phone trial', text: 'Phones sign Palm payments for real. No mining yet.' },
-            { title: 'Heartbeats only', text: 'The app sends heartbeats and shows how long the phone has been online.' },
-            { title: '$Q as points', text: 'Draws run and wins are credited as $Q that cannot be transferred, once 1,000 nodes are online.' },
-            { title: 'Second ticket on', text: 'The extra ticket for phones that do their signing work.' },
-            { title: 'Checked on chain', text: 'A program on QuFi\'s Solana network checks every claim.' },
-            { title: 'Transfers, only if approved', text: 'Only after legal review in each launch country.' },
-          ],
-        },
-        { type: 'text', body: ['Planned design, November 2026. Details may change before launch. $Q cannot be transferred at launch; any change to that needs legal review in each launch country first. Figures describe the planned schedule, not a promise of any reward.'] },
-      ],
-    },
   ],
 };
