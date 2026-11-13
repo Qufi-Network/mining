@@ -1,0 +1,459 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>$Q Uptime Mining</title>
+<meta name="description" content="How QuFi nodes mine $Q by staying online: a fair public draw every 10 minutes, who can win, and a supply schedule built like Bitcoin's.">
+<meta property="og:title" content="$Q Uptime Mining">
+<meta property="og:description" content="QuFi nodes mine $Q by staying online: a fair public draw every 10 minutes and a supply built like Bitcoin's.">
+<meta property="og:image" content="/qicon.png">
+<meta name="theme-color" content="#071A4D">
+<link rel="icon" type="image/png" href="/qicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<style>
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; color-scheme: light; }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+/* Layout: a deep navy brand band with the Q in orbit, then one calm reading column of short sections. QuFi brand kit: Inter only, QuFi Blue, Deep Navy. */
+:root {
+  --bg: #F8FAFC;
+  --surface: #FFFFFF;
+  --ink: #071018;
+  --muted: #4B5876;
+  --soft: #EAF1FF;
+  --line: #DCE3F1;
+  --line-strong: #A9B6D3;
+  --accent: #1557FF;
+  --accent-text: #1557FF;
+  --chart: #1557FF;
+  --chart-fill: rgba(21, 87, 255, 0.10);
+  --hero-bg: #071A4D;
+  --hero-ink: #FFFFFF;
+  --hero-muted: #B9C7EC;
+  --hero-line: rgba(255, 255, 255, 0.16);
+  --good: #127A4A;
+  --bad: #B42318;
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --radius: 14px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #06143D; --surface: #0B2463; --ink: #F8FAFC; --muted: #A8B7DE; --soft: #10307A;
+    --line: #1E3A82; --line-strong: #4C64A6; --accent: #5A82FF; --accent-text: #9BB3FF;
+    --chart: #5A82FF; --chart-fill: rgba(90, 130, 255, 0.18); --hero-bg: #040E2C;
+    --hero-ink: #FFFFFF; --hero-muted: #B9C7EC; --hero-line: rgba(255, 255, 255, 0.14);
+    --good: #4ADE9A; --bad: #FF9A90; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #06143D; --surface: #0B2463; --ink: #F8FAFC; --muted: #A8B7DE; --soft: #10307A;
+  --line: #1E3A82; --line-strong: #4C64A6; --accent: #5A82FF; --accent-text: #9BB3FF;
+  --chart: #5A82FF; --chart-fill: rgba(90, 130, 255, 0.18); --hero-bg: #040E2C;
+  --hero-ink: #FFFFFF; --hero-muted: #B9C7EC; --hero-line: rgba(255, 255, 255, 0.14);
+  --good: #4ADE9A; --bad: #FF9A90; color-scheme: dark;
+}
+body { background: var(--bg); color: var(--ink); font-family: var(--font); font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+.wrap { max-width: 920px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h1, h2, h3 { text-wrap: balance; margin: 0; }
+p { margin: 0; }
+a { color: var(--accent-text); }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+
+/* Brand band */
+.hero { background: var(--hero-bg); color: var(--hero-ink); }
+.hero .wrap { padding-block: 28px 44px; display: grid; gap: 36px; }
+.topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.topbar img { height: 22px; width: auto; display: block; }
+.tag { font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--hero-muted); border: 1px solid var(--hero-line); border-radius: 999px; padding: 4px 12px; }
+.hero-grid { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: 32px; align-items: center; }
+.eyebrow { font-size: 13px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--hero-muted); margin-bottom: 14px; }
+.hero h1 { font-size: clamp(36px, 6vw, 56px); line-height: 1.05; font-weight: 700; letter-spacing: -0.02em; }
+.hero h1 em { font-style: normal; color: #5A82FF; }
+.lead { margin-top: 18px; font-size: 18px; line-height: 1.6; color: var(--hero-muted); max-width: 34em; }
+.orbit { position: relative; width: min(100%, 300px); aspect-ratio: 1; justify-self: center; max-width: 100%; }
+.orbit .glow { position: absolute; inset: 14%; border-radius: 50%; background: radial-gradient(circle, rgba(21, 87, 255, 0.55), rgba(21, 87, 255, 0) 70%); }
+.orbit .qicon { position: absolute; inset: 20%; width: 60%; height: 60%; object-fit: contain; }
+.orbit .ring { position: absolute; inset: 2%; border-radius: 50%; border: 1px solid var(--hero-line); }
+.orbit .ring span { position: absolute; width: 14px; height: 14px; margin: -7px; border-radius: 50%; background: #EAF1FF; box-shadow: 0 0 0 4px rgba(21, 87, 255, 0.55); left: 50%; top: 0; transform-origin: 7px calc(min(300px, 100%) * 0.48); }
+.orbit .ring span:nth-child(1) { left: 50%; top: 0; }
+.orbit .ring span:nth-child(2) { left: 93.3%; top: 75%; }
+.orbit .ring span:nth-child(3) { left: 6.7%; top: 75%; }
+@media (prefers-reduced-motion: no-preference) {
+  .orbit .ring { animation: spin 24s linear infinite; }
+  .orbit .glow { animation: breathe 5s ease-in-out infinite; }
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes breathe { 50% { opacity: 0.65; transform: scale(1.05); } }
+.facts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; margin: 0; border-top: 1px solid var(--hero-line); }
+.facts div { padding: 18px 16px 0 0; }
+.facts dt { font-size: clamp(22px, 3.4vw, 30px); font-weight: 700; letter-spacing: -0.01em; font-variant-numeric: tabular-nums; }
+.facts dd { margin: 4px 0 0; font-size: 14px; color: var(--hero-muted); }
+
+/* Sections */
+main .wrap { padding-block: 56px 72px; display: grid; gap: 72px; }
+section { display: grid; gap: 20px; min-width: 0; }
+.kicker { font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent-text); }
+h2 { font-size: clamp(26px, 3.6vw, 34px); line-height: 1.15; font-weight: 700; letter-spacing: -0.015em; }
+h2 em { font-style: normal; color: var(--accent-text); }
+.intro { font-size: 17px; color: var(--muted); max-width: 40em; }
+h3 { font-size: 17px; font-weight: 600; line-height: 1.3; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
+
+.steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; counter-reset: step; }
+.steps li { padding: 22px 20px; display: grid; gap: 10px; align-content: start; counter-increment: step; }
+.steps li::before { content: counter(step); width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; font-size: 14px; background: var(--soft); color: var(--accent-text); }
+.steps p { color: var(--muted); font-size: 15px; }
+
+.diagram { padding: 18px; overflow-x: auto; }
+.diagram svg { display: block; width: 100%; min-width: 640px; height: auto; }
+.d-box { fill: none; stroke: var(--line-strong); stroke-width: 1.25; }
+.d-win { fill: var(--soft); stroke: var(--accent); stroke-width: 2; }
+.d-line { fill: none; stroke: var(--line-strong); stroke-width: 1.25; }
+.d-name { fill: var(--ink); font-weight: 600; font-size: 13px; }
+.d-sub { fill: var(--muted); font-size: 11.5px; }
+.d-title { fill: var(--ink); font-weight: 600; font-size: 15px; }
+.d-arrow { fill: var(--line-strong); }
+.caption { font-size: 14px; color: var(--muted); }
+
+.checks { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+.check { padding: 20px; display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 4px 12px; align-items: start; }
+.check svg { width: 28px; height: 28px; grid-row: span 2; }
+.check p { color: var(--muted); font-size: 15px; grid-column: 2; }
+.tick-bg { fill: var(--soft); }
+.tick { fill: none; stroke: var(--accent); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+
+.analogy { padding: 22px 24px; background: var(--soft); border-radius: var(--radius); font-size: 18px; line-height: 1.55; }
+.analogy strong { color: var(--accent-text); }
+.pair { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+.pair .card { padding: 20px; display: grid; gap: 8px; align-content: start; }
+.pair p { color: var(--muted); font-size: 15px; }
+
+.split { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+.split .card { padding: 22px; display: grid; gap: 12px; align-content: start; }
+.split ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+.split li { display: grid; grid-template-columns: 18px minmax(0, 1fr); gap: 10px; font-size: 15px; }
+.split li::before { content: ""; width: 10px; height: 10px; border-radius: 50%; margin-top: 7px; }
+.yes li::before { background: var(--good); }
+.no li::before { background: var(--bad); }
+.label { font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; }
+.yes .label { color: var(--good); }
+.no .label { color: var(--bad); }
+
+.chart-card { padding: 20px 20px 12px; display: grid; gap: 6px; }
+.chart-wrap { position: relative; }
+.chart-wrap svg { display: block; width: 100%; height: auto; touch-action: pan-y; }
+.axis-text { fill: var(--muted); font-size: 12px; font-variant-numeric: tabular-nums; }
+.grid-line { stroke: var(--line); stroke-width: 1; }
+.halving { stroke: var(--line-strong); stroke-width: 1; stroke-dasharray: 3 4; }
+.area { fill: var(--chart-fill); }
+.curve { fill: none; stroke: var(--chart); stroke-width: 2; stroke-linejoin: round; }
+.point { fill: var(--chart); stroke: var(--surface); stroke-width: 2; }
+.note { fill: var(--ink); font-size: 12.5px; font-weight: 600; }
+.cross { stroke: var(--line-strong); stroke-width: 1; }
+.tip { position: absolute; pointer-events: none; background: var(--surface); color: var(--ink); border: 1px solid var(--line-strong); border-radius: 10px; padding: 8px 10px; font-size: 13px; line-height: 1.45; box-shadow: 0 6px 20px rgba(7, 16, 24, 0.14); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.tip strong { display: block; }
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 15px; font-variant-numeric: tabular-nums; }
+th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+th { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+td.num, th.num { text-align: right; }
+tr.first td { font-weight: 600; }
+.callout { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 14px; align-items: center; padding: 16px 20px; }
+.callout .big { font-size: 28px; font-weight: 700; color: var(--accent-text); font-variant-numeric: tabular-nums; }
+.callout p { color: var(--muted); font-size: 15px; }
+
+.threats { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; }
+.threats .card { padding: 18px 20px; display: grid; gap: 6px; align-content: start; }
+.threats .try { font-size: 13px; color: var(--muted); }
+.threats h3 { font-size: 16px; }
+.threats p { font-size: 15px; color: var(--muted); }
+
+.road { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
+.road li { display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 16px; padding-bottom: 22px; position: relative; }
+.road li::before { content: attr(data-n); width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; background: var(--surface); border: 1.5px solid var(--accent); color: var(--accent-text); position: relative; z-index: 1; }
+.road li:not(:last-child)::after { content: ""; position: absolute; left: 19.5px; top: 40px; bottom: 0; width: 1.5px; background: var(--line-strong); }
+.road h3 { margin-top: 8px; }
+.road p { color: var(--muted); font-size: 15px; margin-top: 2px; }
+.road .now::before { background: var(--accent); color: #FFFFFF; }
+
+footer { border-top: 1px solid var(--line); }
+footer .wrap { padding-block: 28px 40px; display: grid; gap: 14px; }
+.foot-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.foot-logo { display: flex; align-items: center; gap: 12px; }
+.foot-logo img.q { width: 36px; height: 36px; }
+.foot-logo img.wm { height: 16px; width: auto; }
+.wm-dark { display: none; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .wm-light { display: none; } :root:not([data-theme="light"]) .wm-dark { display: inline; } }
+:root[data-theme="dark"] .wm-light { display: none; }
+:root[data-theme="dark"] .wm-dark { display: inline; }
+footer p { font-size: 14px; color: var(--muted); max-width: 46em; }
+
+@media (max-width: 720px) {
+  .hero-grid { grid-template-columns: minmax(0, 1fr); }
+  .orbit { width: min(70%, 240px); order: -1; }
+  .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  main .wrap { gap: 56px; }
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="topbar">
+      <img src="qufi-wordmark-white.png" alt="QuFi" width="546" height="96">
+      <span class="tag">Planned design</span>
+    </div>
+    <div class="hero-grid">
+      <div>
+        <p class="eyebrow">$Q mining</p>
+        <h1>Mined by staying <em>online</em></h1>
+        <p class="lead">Every licensed phone that keeps the QuFi node network running gets one fair chance every 10 minutes to mine 1 $Q. No mining rigs and no wasted power: a public draw that nobody, QuFi included, can predict or change.</p>
+      </div>
+      <div class="orbit" aria-hidden="true">
+        <div class="glow"></div>
+        <img class="qicon" src="qicon.png" alt="" width="320" height="320">
+        <div class="ring"><span></span><span></span><span></span></div>
+      </div>
+    </div>
+    <dl class="facts">
+      <div><dt>50,000,000</dt><dd>$Q ever, a fixed cap</dd></div>
+      <div><dt>10 minutes</dt><dd>per round, like a Bitcoin block</dd></div>
+      <div><dt>4 years</dt><dd>between halvings</dd></div>
+      <div><dt>1,000</dt><dd>nodes online before mining starts</dd></div>
+    </dl>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+
+    <section aria-labelledby="how">
+      <p class="kicker">How it works</p>
+      <h2 id="how">Four steps, every 10 minutes</h2>
+      <ol class="steps">
+        <li class="card"><h3>Stay online</h3><p>The QuFi Node app sends a signed heartbeat every 5 minutes. Each one carries the latest public random number, so it cannot be made in advance.</p></li>
+        <li class="card"><h3>Get one ticket</h3><p>Each round, every eligible phone gets exactly one ticket, worked out from the round's random number and the phone's own hardware key.</p></li>
+        <li class="card"><h3>The draw</h3><p>Tickets below the round's target win. The target adjusts like Bitcoin's difficulty, so the network mines the planned amount however many phones join.</p></li>
+        <li class="card"><h3>Win 1 $Q</h3><p>Anyone can check a win from public data alone. The $Q is credited to the phone owner's account.</p></li>
+      </ol>
+    </section>
+
+    <section aria-labelledby="round">
+      <p class="kicker">One round</p>
+      <h2 id="round">From random number to <em>$Q</em></h2>
+      <div class="card diagram">
+        <svg viewBox="0 0 760 304" role="img" aria-label="One round: a new random value, eligible phones each get one ticket, tickets below the target win, the claim is checked and 1 $Q is credited, then the target adjusts for the next round.">
+          <defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path class="d-arrow" d="M0 0L10 5L0 10z"/></marker></defs>
+          <text class="d-title" x="24" y="34">A phone wins when its one ticket falls below the target</text>
+          <g class="d-line">
+            <path d="M184 118H208" marker-end="url(#ar)"/>
+            <path d="M368 118H392" marker-end="url(#ar)"/>
+            <path d="M552 118H584" marker-end="url(#ar)"/>
+            <path d="M648 158V222" marker-end="url(#ar)"/>
+            <path d="M576 250H552" marker-end="url(#ar)"/>
+            <path d="M392 250H368" marker-end="url(#ar)"/>
+            <path d="M208 250H104V146" marker-end="url(#ar)"/>
+            <path d="M648 78V64H104V90" marker-end="url(#ar)"/>
+          </g>
+          <rect class="d-box" x="24" y="90" width="160" height="56" rx="8"/>
+          <text class="d-name" x="104" y="114" text-anchor="middle">Round starts</text>
+          <text class="d-sub" x="104" y="130" text-anchor="middle">a new random value</text>
+          <rect class="d-box" x="208" y="90" width="160" height="56" rx="8"/>
+          <text class="d-name" x="288" y="114" text-anchor="middle">Eligible phones</text>
+          <text class="d-sub" x="288" y="130" text-anchor="middle">licensed and online</text>
+          <rect class="d-box" x="392" y="90" width="160" height="56" rx="8"/>
+          <text class="d-name" x="472" y="114" text-anchor="middle">One ticket each</text>
+          <text class="d-sub" x="472" y="130" text-anchor="middle">SHA256(value, key)</text>
+          <polygon class="d-box" points="584,118 648,78 712,118 648,158"/>
+          <text class="d-name" x="648" y="122" text-anchor="middle">Below target?</text>
+          <rect class="d-box" x="576" y="222" width="160" height="56" rx="8"/>
+          <text class="d-name" x="656" y="246" text-anchor="middle">Claim checked</text>
+          <text class="d-sub" x="656" y="262" text-anchor="middle">anyone can recheck</text>
+          <rect class="d-win" x="392" y="222" width="160" height="56" rx="8"/>
+          <text class="d-name" x="472" y="246" text-anchor="middle">1 $Q credited</text>
+          <text class="d-sub" x="472" y="262" text-anchor="middle">to the phone's owner</text>
+          <rect class="d-box" x="208" y="222" width="160" height="56" rx="8"/>
+          <text class="d-name" x="288" y="246" text-anchor="middle">Target adjusts</text>
+          <text class="d-sub" x="288" y="262" text-anchor="middle">toward planned wins</text>
+          <text class="d-sub" x="658" y="194">yes</text>
+          <text class="d-sub" x="376" y="56" text-anchor="middle">no win: next round</text>
+          <text class="d-sub" x="112" y="204">next round, new target</text>
+        </svg>
+      </div>
+      <p class="caption">Each phone gets one ticket a round. A ticket under the target wins 1 $Q, and the target then moves toward the planned number of wins for the next round.</p>
+    </section>
+
+    <section aria-labelledby="who">
+      <p class="kicker">Who can win</p>
+      <h2 id="who">Four checks, every round</h2>
+      <p class="intro">A phone is in the draw only when all four hold. Uptime is the easiest thing to fake, so each ticket has to cost one real phone, one licence and one person.</p>
+      <div class="checks">
+        <div class="card check"><svg viewBox="0 0 28 28" aria-hidden="true"><circle class="tick-bg" cx="14" cy="14" r="14"/><path class="tick" d="M8.5 14.5l3.6 3.6 7.4-8"/></svg><h3>A node licence</h3><p>The phone joined with an invite or licence signed by the network key.</p></div>
+        <div class="card check"><svg viewBox="0 0 28 28" aria-hidden="true"><circle class="tick-bg" cx="14" cy="14" r="14"/><path class="tick" d="M8.5 14.5l3.6 3.6 7.4-8"/></svg><h3>A real phone</h3><p>Its key lives in the phone's security chip, proven by Android Key Attestation. Emulators and servers cannot fake that proof.</p></div>
+        <div class="card check"><svg viewBox="0 0 28 28" aria-hidden="true"><circle class="tick-bg" cx="14" cy="14" r="14"/><path class="tick" d="M8.5 14.5l3.6 3.6 7.4-8"/></svg><h3>Online for the last day</h3><p>A heartbeat in every 5 minute slot for 24 hours, with up to 10 minutes of grace for a network blip.</p></div>
+        <div class="card check"><svg viewBox="0 0 28 28" aria-hidden="true"><circle class="tick-bg" cx="14" cy="14" r="14"/><path class="tick" d="M8.5 14.5l3.6 3.6 7.4-8"/></svg><h3>One per person</h3><p>Each person mines with a capped number of phones. Extra phones earn nothing more.</p></div>
+      </div>
+    </section>
+
+    <section aria-labelledby="fair">
+      <p class="kicker">A fair draw</p>
+      <h2 id="fair">Nobody can rig the <em>random number</em></h2>
+      <p class="analogy">Think of a raffle where every ticket was printed the day before, and the winning number is drawn by <strong>many independent referees</strong> who each sign it. Nobody can change a ticket, and nobody can pick the number.</p>
+      <div class="pair">
+        <div class="card"><h3>Made by many, not one</h3><p>The number comes from drand, run by the independent operators of the League of Entropy. None of them knows it in advance or can set it alone.</p></div>
+        <div class="card"><h3>Signed and checked by every phone</h3><p>Each number is signed. The app holds drand's public key and refuses any number whose signature does not check out.</p></div>
+        <div class="card"><h3>Everything else is fixed first</h3><p>Phone keys, who is eligible and the target are all settled before the number exists, so nothing can be adjusted after seeing it.</p></div>
+        <div class="card"><h3>No backdoor</h3><p>If drand ever stopped, mining would simply pause. It never switches to a number a person picks.</p></div>
+      </div>
+    </section>
+
+    <section aria-labelledby="work">
+      <p class="kicker">Proof of contribution</p>
+      <h2 id="work">Doing the work earns a second ticket</h2>
+      <p class="intro">Uptime earns a phone its ticket. A phone that answers 95% or more of the signing work it is asked for over 7 days gets one extra ticket each round. Never more than two.</p>
+      <div class="split">
+        <div class="card yes"><p class="label">Counts</p><ul><li>Answering a signing round on time</li><li>Correctly refusing a bad request</li><li>Helping make a new vault's key</li><li>Later: vouching for fellow nodes' heartbeats</li></ul></div>
+        <div class="card no"><p class="label">Never counts</p><ul><li>Approving a payment. A node paid per signature would be paid to say yes, the opposite of what keeps vaults safe.</li><li>A refusal of a bad request scores exactly the same as a signature on a good one.</li></ul></div>
+      </div>
+    </section>
+
+    <section aria-labelledby="supply">
+      <p class="kicker">Supply</p>
+      <h2 id="supply">Built like <em>Bitcoin</em></h2>
+      <p class="intro">$Q follows Bitcoin's schedule. The $Q mined per round halves every 210,000 rounds, about every 4 years. The first era mines half of all $Q, each era after it half of the one before, approaching 50,000,000 and never passing it.</p>
+      <div class="card chart-card">
+        <h3>Total $Q mined over the first 40 years</h3>
+        <div class="chart-wrap" id="chart">
+          <svg id="supply-svg" viewBox="0 0 720 320" role="img" aria-label="Total $Q mined rises to 25 million by year 4, 37.5 million by year 8 and about 48.4 million by year 20, approaching the 50 million cap."></svg>
+          <div class="tip" id="tip" hidden></div>
+        </div>
+      </div>
+      <div class="card callout"><span class="big">1,000</span><p>Mining starts only once 1,000 licensed nodes are online, so the richest first era is shared widely instead of going to a handful of early phones.</p></div>
+      <div class="card table-wrap">
+        <table>
+          <thead><tr><th>Era</th><th>Years</th><th class="num">Mined in the era</th><th class="num">Total mined</th><th class="num">Winners per round</th></tr></thead>
+          <tbody>
+            <tr class="first"><td>1</td><td>0 to 4</td><td class="num">25,000,000</td><td class="num">25,000,000 (50%)</td><td class="num">about 119</td></tr>
+            <tr><td>2</td><td>4 to 8</td><td class="num">12,500,000</td><td class="num">37,500,000 (75%)</td><td class="num">about 60</td></tr>
+            <tr><td>3</td><td>8 to 12</td><td class="num">6,250,000</td><td class="num">43,750,000 (87.5%)</td><td class="num">about 30</td></tr>
+            <tr><td>4</td><td>12 to 16</td><td class="num">3,125,000</td><td class="num">46,875,000 (94%)</td><td class="num">about 15</td></tr>
+            <tr><td>5</td><td>16 to 20</td><td class="num">1,562,500</td><td class="num">48,437,500 (97%)</td><td class="num">about 7</td></tr>
+            <tr><td>6</td><td>20 to 24</td><td class="num">781,250</td><td class="num">49,218,750 (98.4%)</td><td class="num">about 4</td></tr>
+            <tr><td>10</td><td>36 to 40</td><td class="num">48,828</td><td class="num">49,951,172 (99.9%)</td><td class="num">about 0.2</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section aria-labelledby="fake">
+      <p class="kicker">Limits</p>
+      <h2 id="fake">What it takes to cheat, and why it fails</h2>
+      <div class="threats">
+        <div class="card"><p class="try">Someone tries</p><h3>A farm of emulators or servers</h3><p>Every phone needs hardware proof that ends at Google's root. A server cannot produce it.</p></div>
+        <div class="card"><p class="try">Someone tries</p><h3>Running many real phones</h3><p>One licence per node and a cap per person. Extra phones earn nothing more.</p></div>
+        <div class="card"><p class="try">Someone tries</p><h3>Rooted phones with leaked keys</h3><p>Every proof is checked against Google's revocation list. Newer phones get their keys provisioned remotely and are not exposed to this kind of leak.</p></div>
+        <div class="card"><p class="try">Someone tries</p><h3>Faking uptime</h3><p>Every heartbeat carries a random number that did not exist earlier, and heartbeats chain together.</p></div>
+        <div class="card"><p class="try">Someone tries</p><h3>Trying many tickets</h3><p>One ticket per phone per round, from a number nobody knows in advance. There is nothing to grind.</p></div>
+        <div class="card"><p class="try">Someone tries</p><h3>Bending signing for rewards</h3><p>Nothing is paid per approved payment. Refusals score the same.</p></div>
+      </div>
+    </section>
+
+    <section aria-labelledby="road">
+      <p class="kicker">Rollout</p>
+      <h2 id="road">Step by step, on the test network first</h2>
+      <ol class="road">
+        <li data-n="1" class="now"><div><h3>Three phone trial</h3><p>Phones sign Palm payments for real. No mining yet.</p></div></li>
+        <li data-n="2"><div><h3>Heartbeats only</h3><p>The app sends heartbeats and shows how long the phone has been online.</p></div></li>
+        <li data-n="3"><div><h3>$Q as points</h3><p>Draws run and wins are credited as $Q that cannot be transferred, once 1,000 nodes are online.</p></div></li>
+        <li data-n="4"><div><h3>Second ticket on</h3><p>The extra ticket for phones that do their signing work.</p></div></li>
+        <li data-n="5"><div><h3>Checked on chain</h3><p>A program on QuFi's Solana network checks every claim.</p></div></li>
+        <li data-n="6"><div><h3>Transfers, only if approved</h3><p>Only after legal review in each launch country.</p></div></li>
+      </ol>
+    </section>
+
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-row">
+      <div class="foot-logo">
+        <img class="q" src="qicon.png" alt="" width="320" height="320">
+        <img class="wm wm-light" src="qufi-wordmark.png" alt="QuFi" width="546" height="96">
+        <img class="wm wm-dark" src="qufi-wordmark-white.png" alt="QuFi" width="546" height="96">
+      </div>
+    </div>
+    <p>Planned design, November 2026. Details may change before launch. $Q cannot be transferred at launch; any change to that needs legal review in each launch country first. Figures describe the planned schedule, not a promise of any reward.</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var svg = document.getElementById('supply-svg');
+  var tip = document.getElementById('tip');
+  var NS = 'http://www.w3.org/2000/svg';
+  var X0 = 64, X1 = 700, Y0 = 24, Y1 = 272, YEARS = 40, CAP = 50000000;
+  function total(t) {
+    var k = Math.min(Math.floor(t / 4), 60);
+    var before = CAP * (1 - Math.pow(2, -k));
+    return before + ((t - 4 * k) / 4) * (CAP / 2) * Math.pow(2, -k);
+  }
+  function x(t) { return X0 + (t / YEARS) * (X1 - X0); }
+  function y(v) { return Y1 - (v / CAP) * (Y1 - Y0); }
+  function el(name, attrs, text) {
+    var e = document.createElementNS(NS, name);
+    for (var a in attrs) e.setAttribute(a, attrs[a]);
+    if (text !== undefined) e.textContent = text;
+    svg.appendChild(e);
+    return e;
+  }
+  for (var m = 0; m <= 50; m += 10) {
+    el('line', { x1: X0, x2: X1, y1: y(m * 1e6), y2: y(m * 1e6), 'class': 'grid-line' });
+    el('text', { x: X0 - 10, y: y(m * 1e6) + 4, 'text-anchor': 'end', 'class': 'axis-text' }, m === 0 ? '0' : m + 'M');
+  }
+  for (var h = 4; h < YEARS; h += 4) el('line', { x1: x(h), x2: x(h), y1: Y0, y2: Y1, 'class': 'halving' });
+  for (var tk = 0; tk <= YEARS; tk += 4) el('text', { x: x(tk), y: Y1 + 20, 'text-anchor': 'middle', 'class': 'axis-text' }, String(tk));
+  el('text', { x: (X0 + X1) / 2, y: Y1 + 42, 'text-anchor': 'middle', 'class': 'axis-text' }, 'Years after mining starts (dashed lines are halvings)');
+  var pts = [];
+  for (var t = 0; t <= YEARS + 1e-9; t += 0.25) pts.push([x(t), y(total(t))]);
+  var line = pts.map(function (p, i) { return (i ? 'L' : 'M') + p[0].toFixed(1) + ' ' + p[1].toFixed(1); }).join('');
+  el('path', { d: line + 'L' + x(YEARS) + ' ' + Y1 + 'L' + X0 + ' ' + Y1 + 'Z', 'class': 'area' });
+  el('path', { d: line, 'class': 'curve' });
+  [[4, '50% by year 4'], [8, '75% by year 8'], [20, '97% by year 20']].forEach(function (n) {
+    var px = x(n[0]), py = y(total(n[0]));
+    el('circle', { cx: px, cy: py, r: 4.5, 'class': 'point' });
+    el('text', { x: px + 10, y: py + 18, 'class': 'note' }, n[1]);
+  });
+  var cross = el('line', { x1: 0, x2: 0, y1: Y0, y2: Y1, 'class': 'cross', visibility: 'hidden' });
+  var dot = el('circle', { cx: 0, cy: 0, r: 5, 'class': 'point', visibility: 'hidden' });
+  var hit = el('rect', { x: X0, y: Y0, width: X1 - X0, height: Y1 - Y0, fill: 'transparent' });
+  function fmt(v) { return Math.round(v).toLocaleString('en-US'); }
+  function show(evt) {
+    var r = svg.getBoundingClientRect();
+    var sx = (evt.clientX - r.left) * (720 / r.width);
+    var t = Math.max(0, Math.min(YEARS, ((sx - X0) / (X1 - X0)) * YEARS));
+    t = Math.round(t * 4) / 4;
+    var v = total(t), era = Math.min(Math.floor(t / 4) + 1, 10);
+    cross.setAttribute('x1', x(t)); cross.setAttribute('x2', x(t)); cross.setAttribute('visibility', 'visible');
+    dot.setAttribute('cx', x(t)); dot.setAttribute('cy', y(v)); dot.setAttribute('visibility', 'visible');
+    tip.innerHTML = '<strong>Year ' + t.toFixed(t % 1 ? 2 : 0) + '</strong>' + fmt(v) + ' $Q mined<br>' + (v / CAP * 100).toFixed(1) + '% of the cap, era ' + era;
+    tip.hidden = false;
+    var px = (x(t) / 720) * r.width, py = (y(v) / 320) * r.height;
+    var w = tip.offsetWidth;
+    tip.style.left = Math.max(0, Math.min(r.width - w, px + 14 > r.width - w ? px - w - 14 : px + 14)) + 'px';
+    tip.style.top = Math.max(0, py - 56) + 'px';
+  }
+  function hide() { tip.hidden = true; cross.setAttribute('visibility', 'hidden'); dot.setAttribute('visibility', 'hidden'); }
+  hit.addEventListener('pointermove', show);
+  hit.addEventListener('pointerdown', show);
+  hit.addEventListener('pointerleave', hide);
+})();
+</script>
+</body>
+</html>
