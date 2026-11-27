@@ -232,9 +232,35 @@ export const mining = {
       ],
     },
     {
-      id: 'model', nav: 'Proof of Contribution',
+      id: 'poc', nav: 'Proof of Contribution', tint: 'panel',
       blocks: [
-        { type: 'head', eyebrow: 'Proof of Contribution', title: 'One day online, **one Q**',
+        { type: 'head', eyebrow: 'Proof of Contribution', title: 'What is **Proof of Contribution**?',
+          lede: 'Proof of Contribution is how the QuFi network recognises the work that keeps it running. A network only works if its nodes are there when they are needed. Proof of Contribution measures exactly that, proves it with a key inside each phone, and records each day of it as one Q.' },
+        { type: 'quote', narrow: true, cite: 'Proof of Contribution, in one line',
+          text: 'You contribute by being there. The network proves you were there. A Q records that you were.' },
+        {
+          type: 'rail', label: 'Contribute, prove, record',
+          items: [
+            { icon: 'mobile', title: 'Contribute', text: 'A Palm node stays online, ready to check palm approvals and sign Palm payments whenever a vault needs it.' },
+            { icon: 'shieldCheck', title: 'Prove', text: 'Every few minutes the node answers the network with a heartbeat signed by a key locked in the phone’s security chip. It cannot be faked from a server or answered for someone else.' },
+            { icon: 'q', title: 'Record', text: 'At the end of each day the network gives one Q to every node that proved it stayed online. The Q is a permanent record of that day.' },
+          ],
+        },
+        {
+          type: 'features', cards: true, cols: 4,
+          items: [
+            { icon: 'fingerprint', title: 'Proven, not claimed', text: 'Contribution counts only when the phone’s own hardware key proves it.' },
+            { icon: 'scale', title: 'The same for every node', text: 'One Q per node per day online. Every node is measured by the same rule.' },
+            { icon: 'lock', title: 'Not bought', text: 'Money, bigger servers or holding Qs earn nothing. Only a day online does.' },
+            { icon: 'search', title: 'Open to check', text: 'Anyone can check from public data which node was online on which day.' },
+          ],
+        },
+      ],
+    },
+    {
+      id: 'model', nav: 'Compared',
+      blocks: [
+        { type: 'head', eyebrow: 'Compared with mining and staking', title: 'One day online, **one Q**',
           lede: 'Proof of work rewards computing power. Proof of stake rewards money locked up. Proof of Contribution counts the thing the Palm network actually runs on: Palm nodes that stay online, each one proven by a key inside the phone.' },
         {
           type: 'features', cards: true, cols: 3,

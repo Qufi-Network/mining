@@ -1,8 +1,8 @@
-/* The $Q mining page. Everything else on the page is qufi.network's own
+/* The Q mining page. Everything else on the page is qufi.network's own
    stylesheet (qufi.css); this file only adds the clean white surface and the
    node phones that sit on the home hero's rings.
 
-   Frame zero is complete: one phone is already lit with its +1 $Q and its
+   Frame zero is complete: one phone is already lit with its +1 Q and its
    beam. The cycle runs only under html.anim, which qufi.js sets after it has
    seen a real animation frame, so a host that never paints one still shows
    the whole scene. */
