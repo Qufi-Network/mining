@@ -1,4 +1,4 @@
-/* The $Q mining page, written in qufi.network's own content format and rendered
+/* The Q mining page, written in qufi.network's own content format and rendered
    with its own layout (../qufi-protocol/src/layout.mjs), so the header, footer,
    type, cards, icons and buttons are the site's, not a copy of them. */
 
@@ -9,7 +9,7 @@ const DFONT = "Inter, -apple-system, 'Segoe UI', system-ui, sans-serif";
 /* The hero is the home page's own stage (point globe, halo, two rings, the
    orbiting bead and the floating Q) with eight node phones threaded on the
    outer ring. As the day's ring fills, the Q sends a coin out to each phone in
-   turn and that phone lights up with +1 $Q: every online node, every day. Frame zero is a finished picture
+   turn and that phone lights up with +1 Q: every online node, every day. Frame zero is a finished picture
    (one winner already lit), and the motion only runs once qufi.js has seen an
    animation frame and set html.anim, so a host that never paints a frame
    still shows the whole scene. Styles in assets/css/mining.css. */
@@ -54,7 +54,7 @@ const phoneMarks = phones.map((p) => {
           <rect x="-22" y="-37" width="44" height="74" rx="10" fill="none" stroke="#1557FF" stroke-width="2.2"/>
           <g transform="translate(${lx} ${ly})">
             <rect x="-32" y="-13.5" width="64" height="27" rx="13.5" fill="#1557FF"/>
-            <text x="0" y="5" text-anchor="middle" font-family="${DFONT}" font-size="14" font-weight="600" fill="#FFFFFF">+1 $Q</text>
+            <text x="0" y="5" text-anchor="middle" font-family="${DFONT}" font-size="14" font-weight="600" fill="#FFFFFF">+1 Q</text>
           </g>
         </g>
         <circle class="mine__ping" style="--o:${p.k}" cx="22" cy="-37" r="8.5" fill="#17A673" opacity=".16"/>
@@ -66,16 +66,16 @@ const hero = `<section class="hero hero--mine">
   <div class="wrap">
     <div class="hero__grid">
       <div class="hero__copy">
-        <p class="eyebrow">$Q mining &middot; one $Q a day</p>
+        <p class="eyebrow">Proof of Contribution &middot; one Q a day</p>
         <h1 class="d1">Mined by<br><strong>staying online</strong></h1>
-        <p class="hero__sub">One $Q a day<br>for every Palm node online</p>
-        <p class="hero__note">Every Palm node that stays online for a day receives one $Q. No mining rigs, no wasted power and no draw: a day online is one $Q. With 20,000 Palm nodes that is at most 7.3 million $Q a year, for ten years.</p>
+        <p class="hero__sub">One Q a day<br>for every Palm node online</p>
+        <p class="hero__note">A Q is a digital unit given for Proof of Contribution. Every Palm node that stays online for a day receives one Q. Qs are not tokens: each one is non-fungible, tied to the node and the day it records. With 20,000 Palm nodes that is at most 7.3 million Q a year, for ten years.</p>
         <div class="hero__cta">
           <a class="btn btn--solid" href="#how">How it works ${icon('next')}</a>
         </div>
         <dl class="hero__facts">
-          <div><dt>73,000,000</dt><dd>$Q at most, ever</dd></div>
-          <div><dt>1 $Q a day</dt><dd>per Palm node online</dd></div>
+          <div><dt>73,000,000</dt><dd>Q at most, ever</dd></div>
+          <div><dt>1 Q a day</dt><dd>per Palm node online</dd></div>
           <div><dt>10 years</dt><dd>of mining</dd></div>
         </dl>
       </div>
@@ -89,7 +89,7 @@ const hero = `<section class="hero hero--mine">
           <circle class="mine__round" cx="300" cy="300" r="210" fill="none" stroke="#1557FF" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="1319.5" stroke-dashoffset="330" transform="rotate(-90 300 300)"/>${beams}
         </svg>
         <img class="hero__q" src="assets/img/qicon.png"
-             alt="The QuFi mark, with Palm node phones around it, each one online receiving 1 $Q a day" width="1100" height="996"
+             alt="The QuFi mark, with Palm node phones around it, each one online receiving 1 Q a day" width="1100" height="996"
              fetchpriority="high" decoding="async">
         <span class="hero__orbit" aria-hidden="true"><i></i></span>
         <svg class="mine mine--over" viewBox="0 0 600 600" aria-hidden="true" focusable="false">
@@ -99,7 +99,7 @@ const hero = `<section class="hero hero--mine">
           <g transform="translate(300 472)">
             <rect x="-92" y="-14" width="184" height="28" rx="14" fill="#FFFFFF" stroke="#CFE0FB" stroke-width="1.25"/>
             <circle class="mine__tick" cx="-74" cy="0" r="3.5" fill="#1557FF"/>
-            <text x="-63" y="3.7" font-family="${DFONT}" font-size="10.5" font-weight="600" letter-spacing="1.2" fill="#1557FF">1 $Q A DAY PER NODE</text>
+            <text x="-63" y="3.7" font-family="${DFONT}" font-size="10.5" font-weight="600" letter-spacing="1.2" fill="#1557FF">1 Q A DAY PER NODE</text>
           </g>
         </svg>
       </div>
@@ -115,7 +115,7 @@ const dayDiagram = `
   <div class="diagram__stage">
     <span class="diagram__glow" aria-hidden="true"></span>
     <svg class="qm-round" viewBox="0 0 760 220" role="img" font-family="${DFONT}"
-         aria-label="One day: the Palm node stays online, it is checked through the day, the day closes, and every node that stayed online receives 1 $Q. Then the next day starts.">
+         aria-label="One day: the Palm node stays online, it is checked through the day, the day closes, and every node that stayed online receives 1 Q. Then the next day starts.">
       <defs><marker id="qm-ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#9CBDF8"/></marker></defs>
       <g fill="none" stroke="#9CBDF8" stroke-width="1.5">
         <path d="M184 90H208" marker-end="url(#qm-ar)"/>
@@ -136,17 +136,17 @@ const dayDiagram = `
         <text x="288" y="103" font-size="11.5" fill="#5D646F">signed heartbeats</text>
         <text x="472" y="86" font-size="13" font-weight="600" fill="#071018">The day closes</text>
         <text x="472" y="103" font-size="11.5" fill="#5D646F">who stayed online?</text>
-        <text x="656" y="86" font-size="13" font-weight="600" fill="#071018">1 $Q credited</text>
+        <text x="656" y="86" font-size="13" font-weight="600" fill="#071018">1 Q credited</text>
         <text x="656" y="103" font-size="11.5" fill="#1557FF">to each online node</text>
         <text x="380" y="192" font-size="11.5" fill="#878D98">the next day starts</text>
       </g>
     </svg>
   </div>
-  <figcaption>Every node that stayed online for the day receives one $Q. A node that was offline receives none for that day.</figcaption>
+  <figcaption>Every node that stayed online for the day receives one Q. A node that was offline receives none for that day.</figcaption>
 </figure>`;
 
-/* Total $Q mined over the ten years, with all 20,000 Palm nodes online every day,
-   and a hover readout. The burn line shows the 7.3 million $Q bought back each year. */
+/* Total Q mined over the ten years, with all 20,000 Palm nodes online every day,
+   and a hover readout. The burn line shows the 7.3 million Q bought back each year. */
 const supplyChart = `
 <style>
   .qm-chart { position: relative; background: #FFFFFF; border: 1px solid var(--line); border-radius: 16px; padding: 22px 22px 12px; }
@@ -156,10 +156,10 @@ const supplyChart = `
   .qm-tip b { display: block; color: var(--ink); }
 </style>
 <div class="qm-chart">
-  <h3 class="d5">$Q mined over the ten years, all 20,000 Palm nodes online</h3>
+  <h3 class="d5">Q mined over the ten years, all 20,000 Palm nodes online</h3>
   <div style="position:relative">
     <svg id="qm-supply" viewBox="0 0 720 320" role="img" font-family="${DFONT}"
-         aria-label="Total $Q mined rises by 7.3 million a year, from zero to 73 million after ten years, with all 20,000 Palm nodes online every day."></svg>
+         aria-label="Total Q mined rises by 7.3 million a year, from zero to 73 million after ten years, with all 20,000 Palm nodes online every day."></svg>
     <div class="qm-tip" id="qm-tip" hidden></div>
   </div>
 </div>
@@ -179,7 +179,7 @@ const supplyChart = `
   for (var tk = 0; tk <= YEARS; tk += 1) el('text', { x: x(tk), y: Y1 + 20, 'text-anchor': 'middle', 'font-size': 12, fill: '#878D98' }, String(tk));
   el('text', { x: (X0 + X1) / 2, y: Y1 + 42, 'text-anchor': 'middle', 'font-size': 12, fill: '#878D98' }, 'Years after mining starts');
   el('line', { x1: X0, x2: X1, y1: y(CAP), y2: y(CAP), stroke: '#1557FF', 'stroke-dasharray': '4 5', 'stroke-opacity': '.5' });
-  el('text', { x: X0 + 8, y: y(CAP) - 8, 'font-size': 12, 'font-weight': 600, fill: '#1557FF' }, '73,000,000 $Q, the most there can be');
+  el('text', { x: X0 + 8, y: y(CAP) - 8, 'font-size': 12, 'font-weight': 600, fill: '#1557FF' }, '73,000,000 Q, the most there can be');
   var d = 'M' + x(0) + ' ' + y(0) + 'L' + x(YEARS) + ' ' + y(CAP);
   el('path', { d: d + 'L' + x(YEARS) + ' ' + Y1 + 'L' + X0 + ' ' + Y1 + 'Z', fill: 'rgba(21, 87, 255, 0.08)' });
   el('path', { d: d, fill: 'none', stroke: '#1557FF', 'stroke-width': 2, 'stroke-linejoin': 'round' });
@@ -196,7 +196,7 @@ const supplyChart = `
     var v = total(t);
     cross.setAttribute('x1', x(t)); cross.setAttribute('x2', x(t)); cross.setAttribute('visibility', 'visible');
     dot.setAttribute('cx', x(t)); dot.setAttribute('cy', y(v)); dot.setAttribute('visibility', 'visible');
-    tip.innerHTML = '<b>Year ' + (t % 1 ? t.toFixed(2) : t) + '</b>' + Math.round(v).toLocaleString('en-US') + ' $Q mined<br>' + Math.round(t * 365).toLocaleString('en-US') + ' $Q for one node online every day';
+    tip.innerHTML = '<b>Year ' + (t % 1 ? t.toFixed(2) : t) + '</b>' + Math.round(v).toLocaleString('en-US') + ' Q mined<br>' + Math.round(t * 365).toLocaleString('en-US') + ' Q for one node online every day';
     tip.hidden = false;
     var px = (x(t) / 720) * r.width, py = (y(v) / 320) * r.height, w = tip.offsetWidth;
     tip.style.left = Math.max(0, Math.min(r.width - w, px + 14 > r.width - w ? px - w - 14 : px + 14)) + 'px';
@@ -209,33 +209,48 @@ const supplyChart = `
 
 export const mining = {
   slug: 'index',
-  metaTitle: '$Q Mining · QuFi Network',
+  metaTitle: 'Q Mining · QuFi Network',
   title: 'Mined by **staying online**',
   section: 'Mining',
-  description: 'Every Palm node that stays online for a day receives one $Q. With 20,000 Palm nodes over ten years that is at most 73 million $Q, matching the 7.3 million $Q bought back and burnt each year.',
+  description: 'Qs are non-fungible digital units given for Proof of Contribution: every Palm node that stays online for a day receives one Q. With 20,000 Palm nodes over ten years that is at most 73 million Q, matching the 7.3 million Q bought back and burnt each year.',
   navActive: 'network.html',
   custom: hero,
   sections: [
     {
-      id: 'model', nav: 'The model',
+      id: 'what', nav: 'What a Q is',
       blocks: [
-        { type: 'head', eyebrow: 'The model', title: 'One day online, **one $Q**',
-          lede: 'Proof of work rewards computing power. Proof of stake rewards money locked up. $Q is mined by the thing the Palm network actually runs on: Palm nodes that stay online, each one proven by a key inside the phone.' },
+        { type: 'head', eyebrow: 'What a Q is', title: 'A unit of **Proof of Contribution**',
+          lede: 'A Q is a digital unit the network gives for Proof of Contribution. It records one thing: a Palm node was online and doing its job for a whole day. Qs are not tokens, and no two are the same.' },
         {
           type: 'features', cards: true, cols: 3,
           items: [
-            { icon: 'mobile', title: 'Being online is the work', text: 'Staying reachable is what keeps Palm vaults able to sign. Nothing is burned to mine a $Q.' },
+            { icon: 'clock', title: 'One day online', text: 'Each Q stands for one day a Palm node stayed online. A node online for a year has 365 of them.' },
+            { icon: 'fingerprint', title: 'Non-fungible', text: 'Every Q is tied to the node that earned it and the day it records, so no Q is interchangeable with another.' },
+            { icon: 'badge', title: 'Not a token', text: 'A Q is a record of contribution given by the network, not a token, a coin or a security, and not a claim on anything.' },
+          ],
+        },
+      ],
+    },
+    {
+      id: 'model', nav: 'Proof of Contribution',
+      blocks: [
+        { type: 'head', eyebrow: 'Proof of Contribution', title: 'One day online, **one Q**',
+          lede: 'Proof of work rewards computing power. Proof of stake rewards money locked up. Proof of Contribution counts the thing the Palm network actually runs on: Palm nodes that stay online, each one proven by a key inside the phone.' },
+        {
+          type: 'features', cards: true, cols: 3,
+          items: [
+            { icon: 'mobile', title: 'Being online is the work', text: 'Staying reachable is what keeps Palm vaults able to sign. Nothing is burned to mine a Q.' },
             { icon: 'fingerprint', title: 'Every day is proven', text: 'Each heartbeat is signed by a key in the phone\'s security chip, so it cannot be made in advance or copied to another device.' },
-            { icon: 'scale', title: 'The same for every node', text: 'One $Q per node per online day. No draw and no luck: more money or more servers buy no extra $Q for a node.' },
+            { icon: 'scale', title: 'The same for every node', text: 'One Q per node per online day. No draw and no luck: more money or more servers buy no extra Q for a node.' },
           ],
         },
         {
           type: 'table', label: 'Three ways to reward a network',
-          head: ['', 'Proof of work', 'Proof of stake', '$Q mining'],
+          head: ['', 'Proof of work', 'Proof of stake', 'Proof of Contribution'],
           rows: [
             ['What earns a reward', 'Computing power', 'Coins locked up', 'A Palm node online for the day'],
             ['What it takes to join', 'Mining rigs and electricity', 'Capital at risk', 'A Palm node on a phone that stays online'],
-            ['How much', 'Depends on hardware', 'Depends on stake', 'One $Q per node per day, the same for every node'],
+            ['How much', 'Depends on hardware', 'Depends on stake', 'One Q per node per day, the same for every node'],
             ['How it is decided', 'First to solve a puzzle', 'Chosen by stake', 'Every node that stayed online, no draw'],
           ],
         },
@@ -252,7 +267,7 @@ export const mining = {
             { icon: 'mobile', title: 'Stay online', text: 'The Palm node app sends a signed heartbeat every 5 minutes from the phone.' },
             { icon: 'stamp', title: 'Checked all day', text: 'Each heartbeat is checked against the node\'s own hardware key, so no one can answer for it.' },
             { icon: 'clock', title: 'The day closes', text: 'At the end of the day the network counts which nodes stayed online.' },
-            { icon: 'q', title: '1 $Q credited', text: 'Every node that stayed online receives one $Q. Anyone can check it from public data.' },
+            { icon: 'q', title: '1 Q credited', text: 'Every node that stayed online receives one Q. Anyone can check it from public data.' },
           ],
         },
       ],
@@ -260,7 +275,7 @@ export const mining = {
     {
       id: 'day', nav: 'One day', tint: true,
       blocks: [
-        { type: 'head', eyebrow: 'One day', title: 'From a day online to **$Q**' },
+        { type: 'head', eyebrow: 'One day', title: 'From a day online to **Q**' },
         { type: 'raw', html: dayDiagram },
       ],
     },
@@ -268,7 +283,7 @@ export const mining = {
       id: 'who', nav: 'Who mines',
       blocks: [
         { type: 'head', eyebrow: 'Who mines', title: 'Three checks, **every day**',
-          lede: 'A node mines its $Q for the day only when all three hold. Uptime is the easiest thing to fake, so each day has to be proven by one real phone running one licensed node.' },
+          lede: 'A node mines its Q for the day only when all three hold. Uptime is the easiest thing to fake, so each day has to be proven by one real phone running one licensed node.' },
         {
           type: 'checks', cols: 3,
           items: [
@@ -282,15 +297,15 @@ export const mining = {
     {
       id: 'supply', nav: 'Supply', tint: true,
       blocks: [
-        { type: 'head', eyebrow: 'Supply', title: 'Ten years, **73 million $Q**',
-          lede: '20,000 Palm nodes × 365 days × 10 years = 73,000,000 $Q. That is the most there can ever be: fewer nodes online means fewer $Q. Each year the treasury, funded by half of every Palm fee, buys back 7.3 million $Q and burns it, the same as the most that can be mined in a year.' },
+        { type: 'head', eyebrow: 'Supply', title: 'Ten years, **73 million Q**',
+          lede: '20,000 Palm nodes × 365 days × 10 years = 73,000,000 Q. That is the most there can ever be: fewer nodes online means fewer Q. Each year the treasury, funded by half of every Palm fee, buys back 7.3 million Q and burns it, the same as the most that can be mined in a year.' },
         {
           type: 'stats',
           items: [
-            { value: '73,000,000', key: '$Q at most', note: 'over ten years' },
-            { value: '7,300,000', key: '$Q a year at most', note: '20,000 nodes × 365 days' },
-            { value: '3,650', key: '$Q for one node', note: 'online every day for ten years' },
-            { value: '7,300,000', key: '$Q burnt a year', note: 'bought back by the treasury' },
+            { value: '73,000,000', key: 'Q at most', note: 'over ten years' },
+            { value: '7,300,000', key: 'Q a year at most', note: '20,000 nodes × 365 days' },
+            { value: '3,650', key: 'Q for one node', note: 'online every day for ten years' },
+            { value: '7,300,000', key: 'Q burnt a year', note: 'bought back by the treasury' },
           ],
         },
         { type: 'raw', html: supplyChart },

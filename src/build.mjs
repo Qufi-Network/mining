@@ -1,4 +1,4 @@
-/* Builds the $Q mining page with qufi.network's own layout, stylesheet, scripts
+/* Builds the Q mining page with qufi.network's own layout, stylesheet, scripts
    and icons, from the site's source in ../../qufi-protocol, so this page looks
    and behaves exactly like the rest of qufi.network.
 
@@ -34,7 +34,7 @@ const { icon } = await from('icons.mjs');
    single button in the sticky header. */
 const HEADER = `<header class="site-head">
   <div class="wrap site-head__in">
-    <a class="brand" href="#main" aria-label="$Q mining, back to the top">
+    <a class="brand" href="#main" aria-label="Q mining, back to the top">
       <img class="brand__logo" src="assets/img/qufi-logo.png"
            alt="QuFi Network" width="105" height="44">
       <span class="brand__sub">Quantum<br>Verification<br>Network</span>
@@ -53,8 +53,8 @@ const FOOTER = `<footer class="site-foot" data-track>
         </a>
         <div>
           <p class="d4">Mined by staying online.</p>
-          <p class="small mt-1">Every Palm node that stays online for a day receives one $Q, for ten years: at most 73 million $Q.</p>
-          <p class="small mt-1">Planned design, November 2026. Details may change before launch. $Q cannot be transferred at launch; any change to that needs legal review in each launch country first. Figures describe the planned schedule, not a promise of any reward.</p>
+          <p class="small mt-1">Qs are non-fungible digital units given for Proof of Contribution: one per Palm node per day online, for ten years, at most 73 million. Qs are not tokens.</p>
+          <p class="small mt-1">Planned design, November 2026. Details may change before launch. Q cannot be transferred at launch; any change to that needs legal review in each launch country first. Figures describe the planned schedule, not a promise of any reward.</p>
         </div>
       </div>
       <div class="foot-top__act">
