@@ -8,8 +8,8 @@ const DFONT = "Inter, -apple-system, 'Segoe UI', system-ui, sans-serif";
 
 /* The hero is the home page's own stage (point globe, halo, two rings, the
    orbiting bead and the floating Q) with eight node phones threaded on the
-   outer ring. Every round the inner ring fills, the Q sends a coin out to one
-   phone and that phone lights up with +1 $Q. Frame zero is a finished picture
+   outer ring. As the day's ring fills, the Q sends a coin out to each phone in
+   turn and that phone lights up with +1 $Q: every online node, every day. Frame zero is a finished picture
    (one winner already lit), and the motion only runs once qufi.js has seen an
    animation frame and set html.anim, so a host that never paints a frame
    still shows the whole scene. Styles in assets/css/mining.css. */
@@ -66,17 +66,17 @@ const hero = `<section class="hero hero--mine">
   <div class="wrap">
     <div class="hero__grid">
       <div class="hero__copy">
-        <p class="eyebrow">$Q mining &middot; Proof of Contribution</p>
+        <p class="eyebrow">$Q mining &middot; one $Q a day</p>
         <h1 class="d1">Mined by<br><strong>staying online</strong></h1>
-        <p class="hero__sub">A fair chance at $Q<br>every 10 minutes</p>
-        <p class="hero__note">$Q is mined by Proof of Contribution. Every licensed phone that keeps the QuFi node network running gets one ticket in a public draw. No mining rigs and no wasted power, and nobody, QuFi included, can predict or change the result.</p>
+        <p class="hero__sub">One $Q a day<br>for every Palm node online</p>
+        <p class="hero__note">Every Palm node that stays online for a day receives one $Q. No mining rigs, no wasted power and no draw: a day online is one $Q. With 20,000 Palm nodes that is at most 7.3 million $Q a year, for ten years.</p>
         <div class="hero__cta">
           <a class="btn btn--solid" href="#how">How it works ${icon('next')}</a>
         </div>
         <dl class="hero__facts">
-          <div><dt>50,000,000</dt><dd>$Q, a fixed cap</dd></div>
-          <div><dt>Every 4 years</dt><dd>the reward halves</dd></div>
-          <div><dt>1,000 nodes</dt><dd>before the first round</dd></div>
+          <div><dt>73,000,000</dt><dd>$Q at most, ever</dd></div>
+          <div><dt>1 $Q a day</dt><dd>per Palm node online</dd></div>
+          <div><dt>10 years</dt><dd>of mining</dd></div>
         </dl>
       </div>
 
@@ -89,7 +89,7 @@ const hero = `<section class="hero hero--mine">
           <circle class="mine__round" cx="300" cy="300" r="210" fill="none" stroke="#1557FF" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="1319.5" stroke-dashoffset="330" transform="rotate(-90 300 300)"/>${beams}
         </svg>
         <img class="hero__q" src="assets/img/qicon.png"
-             alt="The QuFi mark, with node phones around it, one of them winning 1 $Q" width="1100" height="996"
+             alt="The QuFi mark, with Palm node phones around it, each one online receiving 1 $Q a day" width="1100" height="996"
              fetchpriority="high" decoding="async">
         <span class="hero__orbit" aria-hidden="true"><i></i></span>
         <svg class="mine mine--over" viewBox="0 0 600 600" aria-hidden="true" focusable="false">
@@ -97,9 +97,9 @@ const hero = `<section class="hero hero--mine">
             <radialGradient id="mg-glow"><stop offset="0" stop-color="#1557FF" stop-opacity=".26"/><stop offset="1" stop-color="#1557FF" stop-opacity="0"/></radialGradient>
           </defs>${coins}${phoneMarks}
           <g transform="translate(300 472)">
-            <rect x="-80" y="-14" width="160" height="28" rx="14" fill="#FFFFFF" stroke="#CFE0FB" stroke-width="1.25"/>
-            <circle class="mine__tick" cx="-62" cy="0" r="3.5" fill="#1557FF"/>
-            <text x="-51" y="3.7" font-family="${DFONT}" font-size="10.5" font-weight="600" letter-spacing="1.2" fill="#1557FF">DRAW EVERY 10 MIN</text>
+            <rect x="-92" y="-14" width="184" height="28" rx="14" fill="#FFFFFF" stroke="#CFE0FB" stroke-width="1.25"/>
+            <circle class="mine__tick" cx="-74" cy="0" r="3.5" fill="#1557FF"/>
+            <text x="-63" y="3.7" font-family="${DFONT}" font-size="10.5" font-weight="600" letter-spacing="1.2" fill="#1557FF">1 $Q A DAY PER NODE</text>
           </g>
         </svg>
       </div>
@@ -109,59 +109,44 @@ const hero = `<section class="hero hero--mine">
   </div>
 </section>`;
 
-/* One round, drawn in the site's diagram palette (diagram-kit.mjs C). */
-const roundDiagram = `
+/* One day, drawn in the site's diagram palette (diagram-kit.mjs C). */
+const dayDiagram = `
 <figure class="diagram">
   <div class="diagram__stage">
     <span class="diagram__glow" aria-hidden="true"></span>
-    <svg class="qm-round" viewBox="0 0 760 304" role="img" font-family="${DFONT}"
-         aria-label="One round: a new random value, eligible phones each get one ticket, tickets below the target win, the claim is checked and 1 $Q is credited, then the target adjusts for the next round.">
+    <svg class="qm-round" viewBox="0 0 760 220" role="img" font-family="${DFONT}"
+         aria-label="One day: the Palm node stays online, it is checked through the day, the day closes, and every node that stayed online receives 1 $Q. Then the next day starts.">
       <defs><marker id="qm-ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#9CBDF8"/></marker></defs>
       <g fill="none" stroke="#9CBDF8" stroke-width="1.5">
-        <path d="M184 118H208" marker-end="url(#qm-ar)"/>
-        <path d="M368 118H392" marker-end="url(#qm-ar)"/>
-        <path d="M552 118H584" marker-end="url(#qm-ar)"/>
-        <path d="M648 158V222" marker-end="url(#qm-ar)"/>
-        <path d="M576 250H552" marker-end="url(#qm-ar)"/>
-        <path d="M392 250H368" marker-end="url(#qm-ar)"/>
-        <path d="M208 250H104V146" marker-end="url(#qm-ar)"/>
-        <path d="M648 78V58H104V90" marker-end="url(#qm-ar)"/>
+        <path d="M184 90H208" marker-end="url(#qm-ar)"/>
+        <path d="M368 90H392" marker-end="url(#qm-ar)"/>
+        <path d="M552 90H576" marker-end="url(#qm-ar)"/>
+        <path d="M656 118V170H104V122" marker-end="url(#qm-ar)"/>
       </g>
       <g fill="#FFFFFF" stroke="#CFE0FB" stroke-width="1.25">
-        <rect x="24" y="90" width="160" height="56" rx="10"/>
-        <rect x="208" y="90" width="160" height="56" rx="10"/>
-        <rect x="392" y="90" width="160" height="56" rx="10"/>
-        <polygon points="584,118 648,78 712,118 648,158"/>
-        <rect x="576" y="222" width="160" height="56" rx="10"/>
-        <rect x="208" y="222" width="160" height="56" rx="10"/>
+        <rect x="24" y="62" width="160" height="56" rx="10"/>
+        <rect x="208" y="62" width="160" height="56" rx="10"/>
+        <rect x="392" y="62" width="160" height="56" rx="10"/>
       </g>
-      <rect x="392" y="222" width="160" height="56" rx="10" fill="#EAF1FF" stroke="#1557FF" stroke-width="2"/>
+      <rect x="576" y="62" width="160" height="56" rx="10" fill="#EAF1FF" stroke="#1557FF" stroke-width="2"/>
       <g text-anchor="middle">
-        <text x="104" y="114" font-size="13" font-weight="600" fill="#071018">Round starts</text>
-        <text x="104" y="131" font-size="11.5" fill="#5D646F">a new random value</text>
-        <text x="288" y="114" font-size="13" font-weight="600" fill="#071018">Eligible phones</text>
-        <text x="288" y="131" font-size="11.5" fill="#5D646F">licensed and online</text>
-        <text x="472" y="114" font-size="13" font-weight="600" fill="#071018">One ticket each</text>
-        <text x="472" y="131" font-size="11.5" fill="#5D646F">SHA256(value, key)</text>
-        <text x="648" y="122" font-size="13" font-weight="600" fill="#071018">Below target?</text>
-        <text x="656" y="246" font-size="13" font-weight="600" fill="#071018">Claim checked</text>
-        <text x="656" y="263" font-size="11.5" fill="#5D646F">anyone can recheck</text>
-        <text x="472" y="246" font-size="13" font-weight="600" fill="#071018">1 $Q credited</text>
-        <text x="472" y="263" font-size="11.5" fill="#1557FF">to the phone's owner</text>
-        <text x="288" y="246" font-size="13" font-weight="600" fill="#071018">Target adjusts</text>
-        <text x="288" y="263" font-size="11.5" fill="#5D646F">toward planned wins</text>
-        <text x="376" y="48" font-size="11.5" fill="#878D98">no win: next round</text>
+        <text x="104" y="86" font-size="13" font-weight="600" fill="#071018">Node online</text>
+        <text x="104" y="103" font-size="11.5" fill="#5D646F">the Palm node app runs</text>
+        <text x="288" y="86" font-size="13" font-weight="600" fill="#071018">Checked all day</text>
+        <text x="288" y="103" font-size="11.5" fill="#5D646F">signed heartbeats</text>
+        <text x="472" y="86" font-size="13" font-weight="600" fill="#071018">The day closes</text>
+        <text x="472" y="103" font-size="11.5" fill="#5D646F">who stayed online?</text>
+        <text x="656" y="86" font-size="13" font-weight="600" fill="#071018">1 $Q credited</text>
+        <text x="656" y="103" font-size="11.5" fill="#1557FF">to each online node</text>
+        <text x="380" y="192" font-size="11.5" fill="#878D98">the next day starts</text>
       </g>
-      <text x="658" y="194" font-size="11.5" fill="#878D98">yes</text>
-      <text x="112" y="204" font-size="11.5" fill="#878D98">next round, new target</text>
     </svg>
   </div>
-  <figcaption>Each phone gets one ticket a round. A ticket under the target wins 1 $Q, and the target then moves toward the planned number of wins for the next round.</figcaption>
+  <figcaption>Every node that stayed online for the day receives one $Q. A node that was offline receives none for that day.</figcaption>
 </figure>`;
 
-/* Total $Q mined over 40 years: drawn from the schedule itself, with a hover
-   readout. The schedule is the published one: half the supply in the first
-   210,000 rounds, half of what is left in each era after. */
+/* Total $Q mined over the ten years, with all 20,000 Palm nodes online every day,
+   and a hover readout. The burn line shows the 7.3 million $Q bought back each year. */
 const supplyChart = `
 <style>
   .qm-chart { position: relative; background: #FFFFFF; border: 1px solid var(--line); border-radius: 16px; padding: 22px 22px 12px; }
@@ -171,10 +156,10 @@ const supplyChart = `
   .qm-tip b { display: block; color: var(--ink); }
 </style>
 <div class="qm-chart">
-  <h3 class="d5">Total $Q mined over the first 40 years</h3>
+  <h3 class="d5">$Q mined over the ten years, all 20,000 Palm nodes online</h3>
   <div style="position:relative">
     <svg id="qm-supply" viewBox="0 0 720 320" role="img" font-family="${DFONT}"
-         aria-label="Total $Q mined rises to 25 million by year 4, 37.5 million by year 8 and about 48.4 million by year 20, approaching the 50 million cap."></svg>
+         aria-label="Total $Q mined rises by 7.3 million a year, from zero to 73 million after ten years, with all 20,000 Palm nodes online every day."></svg>
     <div class="qm-tip" id="qm-tip" hidden></div>
   </div>
 </div>
@@ -182,23 +167,23 @@ const supplyChart = `
 (function () {
   var svg = document.getElementById('qm-supply'), tip = document.getElementById('qm-tip');
   if (!svg) return;
-  var NS = 'http://www.w3.org/2000/svg', X0 = 64, X1 = 700, Y0 = 24, Y1 = 272, YEARS = 40, CAP = 50000000;
-  function total(t) { var k = Math.min(Math.floor(t / 4), 60); return CAP * (1 - Math.pow(2, -k)) + ((t - 4 * k) / 4) * (CAP / 2) * Math.pow(2, -k); }
+  var NS = 'http://www.w3.org/2000/svg', X0 = 64, X1 = 700, Y0 = 24, Y1 = 272, YEARS = 10, CAP = 73000000, PER_YEAR = 7300000;
+  function total(t) { return Math.min(CAP, t * PER_YEAR); }
   function x(t) { return X0 + (t / YEARS) * (X1 - X0); }
-  function y(v) { return Y1 - (v / CAP) * (Y1 - Y0); }
+  function y(v) { return Y1 - (v / 80000000) * (Y1 - Y0); }
   function el(n, a, t) { var e = document.createElementNS(NS, n); for (var k in a) e.setAttribute(k, a[k]); if (t !== undefined) e.textContent = t; svg.appendChild(e); return e; }
-  for (var m = 0; m <= 50; m += 10) {
+  for (var m = 0; m <= 80; m += 10) {
     el('line', { x1: X0, x2: X1, y1: y(m * 1e6), y2: y(m * 1e6), stroke: '#E5E9F0' });
     el('text', { x: X0 - 10, y: y(m * 1e6) + 4, 'text-anchor': 'end', 'font-size': 12, fill: '#878D98' }, m ? m + 'M' : '0');
   }
-  for (var h = 4; h < YEARS; h += 4) el('line', { x1: x(h), x2: x(h), y1: Y0, y2: Y1, stroke: '#CFE0FB', 'stroke-dasharray': '3 4' });
-  for (var tk = 0; tk <= YEARS; tk += 4) el('text', { x: x(tk), y: Y1 + 20, 'text-anchor': 'middle', 'font-size': 12, fill: '#878D98' }, String(tk));
-  el('text', { x: (X0 + X1) / 2, y: Y1 + 42, 'text-anchor': 'middle', 'font-size': 12, fill: '#878D98' }, 'Years after mining starts (dashed lines are halvings)');
-  var pts = []; for (var t = 0; t <= YEARS + 1e-9; t += 0.25) pts.push([x(t), y(total(t))]);
-  var d = pts.map(function (p, i) { return (i ? 'L' : 'M') + p[0].toFixed(1) + ' ' + p[1].toFixed(1); }).join('');
+  for (var tk = 0; tk <= YEARS; tk += 1) el('text', { x: x(tk), y: Y1 + 20, 'text-anchor': 'middle', 'font-size': 12, fill: '#878D98' }, String(tk));
+  el('text', { x: (X0 + X1) / 2, y: Y1 + 42, 'text-anchor': 'middle', 'font-size': 12, fill: '#878D98' }, 'Years after mining starts');
+  el('line', { x1: X0, x2: X1, y1: y(CAP), y2: y(CAP), stroke: '#1557FF', 'stroke-dasharray': '4 5', 'stroke-opacity': '.5' });
+  el('text', { x: X0 + 8, y: y(CAP) - 8, 'font-size': 12, 'font-weight': 600, fill: '#1557FF' }, '73,000,000 $Q, the most there can be');
+  var d = 'M' + x(0) + ' ' + y(0) + 'L' + x(YEARS) + ' ' + y(CAP);
   el('path', { d: d + 'L' + x(YEARS) + ' ' + Y1 + 'L' + X0 + ' ' + Y1 + 'Z', fill: 'rgba(21, 87, 255, 0.08)' });
   el('path', { d: d, fill: 'none', stroke: '#1557FF', 'stroke-width': 2, 'stroke-linejoin': 'round' });
-  [[4, '50% by year 4'], [8, '75% by year 8'], [20, '97% by year 20']].forEach(function (n) {
+  [[1, '7.3M after year 1'], [5, '36.5M after year 5']].forEach(function (n) {
     el('circle', { cx: x(n[0]), cy: y(total(n[0])), r: 4.5, fill: '#1557FF', stroke: '#FFFFFF', 'stroke-width': 2 });
     el('text', { x: x(n[0]) + 10, y: y(total(n[0])) + 18, 'font-size': 12.5, 'font-weight': 600, fill: '#071018' }, n[1]);
   });
@@ -208,10 +193,10 @@ const supplyChart = `
   function show(e) {
     var r = svg.getBoundingClientRect(), sx = (e.clientX - r.left) * (720 / r.width);
     var t = Math.round(Math.max(0, Math.min(YEARS, ((sx - X0) / (X1 - X0)) * YEARS)) * 4) / 4;
-    var v = total(t), era = Math.min(Math.floor(t / 4) + 1, 10);
+    var v = total(t);
     cross.setAttribute('x1', x(t)); cross.setAttribute('x2', x(t)); cross.setAttribute('visibility', 'visible');
     dot.setAttribute('cx', x(t)); dot.setAttribute('cy', y(v)); dot.setAttribute('visibility', 'visible');
-    tip.innerHTML = '<b>Year ' + (t % 1 ? t.toFixed(2) : t) + '</b>' + Math.round(v).toLocaleString('en-US') + ' $Q mined<br>' + (v / CAP * 100).toFixed(1) + '% of the cap, era ' + era;
+    tip.innerHTML = '<b>Year ' + (t % 1 ? t.toFixed(2) : t) + '</b>' + Math.round(v).toLocaleString('en-US') + ' $Q mined<br>' + Math.round(t * 365).toLocaleString('en-US') + ' $Q for one node online every day';
     tip.hidden = false;
     var px = (x(t) / 720) * r.width, py = (y(v) / 320) * r.height, w = tip.offsetWidth;
     tip.style.left = Math.max(0, Math.min(r.width - w, px + 14 > r.width - w ? px - w - 14 : px + 14)) + 'px';
@@ -227,32 +212,31 @@ export const mining = {
   metaTitle: '$Q Mining · QuFi Network',
   title: 'Mined by **staying online**',
   section: 'Mining',
-  description: '$Q is mined by Proof of Contribution. Every licensed phone that keeps the QuFi node network running gets one fair chance every 10 minutes to mine 1 $Q, from a public draw nobody can predict or change.',
+  description: 'Every Palm node that stays online for a day receives one $Q. With 20,000 Palm nodes over ten years that is at most 73 million $Q, matching the 7.3 million $Q bought back and burnt each year.',
   navActive: 'network.html',
   custom: hero,
   sections: [
     {
-      id: 'model', nav: 'Proof of Contribution',
+      id: 'model', nav: 'The model',
       blocks: [
-        { type: 'head', eyebrow: 'The model', title: 'Proof of **Contribution**',
-          lede: 'Proof of work rewards computing power. Proof of stake rewards money locked up. Proof of Contribution rewards what the QuFi network actually runs on: phones that stay online and do their signing work, each one proven by a key inside the phone.' },
+        { type: 'head', eyebrow: 'The model', title: 'One day online, **one $Q**',
+          lede: 'Proof of work rewards computing power. Proof of stake rewards money locked up. $Q is mined by the thing the Palm network actually runs on: Palm nodes that stay online, each one proven by a key inside the phone.' },
         {
           type: 'features', cards: true, cols: 3,
           items: [
-            { icon: 'mobile', title: 'The contribution is the work', text: 'Staying reachable and answering signing rounds is what keeps Palm vaults working. Nothing is burned to earn a ticket.' },
-            { icon: 'fingerprint', title: 'Every contribution is proven', text: 'Each heartbeat is signed by a key in the phone\'s security chip and carries the latest public random number, so it cannot be made in advance or copied to another device.' },
-            { icon: 'scale', title: 'Spread wide, not bought', text: 'One ticket for being online, at most one more for doing the work, and a cap on phones per person. More money or more servers buy no extra chances.' },
+            { icon: 'mobile', title: 'Being online is the work', text: 'Staying reachable is what keeps Palm vaults able to sign. Nothing is burned to mine a $Q.' },
+            { icon: 'fingerprint', title: 'Every day is proven', text: 'Each heartbeat is signed by a key in the phone\'s security chip, so it cannot be made in advance or copied to another device.' },
+            { icon: 'scale', title: 'The same for every node', text: 'One $Q per node per online day. No draw and no luck: more money or more servers buy no extra $Q for a node.' },
           ],
         },
         {
           type: 'table', label: 'Three ways to reward a network',
-          head: ['', 'Proof of work', 'Proof of stake', 'Proof of Contribution'],
+          head: ['', 'Proof of work', 'Proof of stake', '$Q mining'],
           rows: [
-            ['What earns a reward', 'Computing power', 'Coins locked up', 'Uptime and signing work'],
-            ['What it takes to join', 'Mining rigs and electricity', 'Capital at risk', 'A licensed phone that stays online'],
-            ['Who earns the most', 'The biggest hardware', 'The largest holders', 'Nobody can buy more: two tickets per phone at most, capped per person'],
-            ['How winners are picked', 'First to solve a puzzle', 'Chosen by stake', 'A public random draw nobody controls'],
-            ['What it decides', 'Who adds the next block', 'Who adds the next block', 'Who mints new $Q. Payments still settle on the chains they use today'],
+            ['What earns a reward', 'Computing power', 'Coins locked up', 'A Palm node online for the day'],
+            ['What it takes to join', 'Mining rigs and electricity', 'Capital at risk', 'A Palm node on a phone that stays online'],
+            ['How much', 'Depends on hardware', 'Depends on stake', 'One $Q per node per day, the same for every node'],
+            ['How it is decided', 'First to solve a puzzle', 'Chosen by stake', 'Every node that stayed online, no draw'],
           ],
         },
       ],
@@ -260,69 +244,37 @@ export const mining = {
     {
       id: 'how', nav: 'How it works',
       blocks: [
-        { type: 'head', eyebrow: 'How it works', title: 'Four steps, **every 10 minutes**',
-          lede: 'Mining runs on the phones that already keep the network running. Staying online is the work.' },
+        { type: 'head', eyebrow: 'How it works', title: 'Four steps, **every day**',
+          lede: 'Mining runs on the Palm nodes that already sign Palm payments. Staying online is the work.' },
         {
-          type: 'rail', label: 'One round',
+          type: 'rail', label: 'One day',
           items: [
-            { icon: 'mobile', title: 'Stay online', text: 'The QuFi Node app sends a signed heartbeat every 5 minutes. Each one carries the latest public random number, so it cannot be made in advance.' },
-            { icon: 'stamp', title: 'Get one ticket', text: 'Each round, every eligible phone gets exactly one ticket, worked out from the round\'s random number and the phone\'s own hardware key.' },
-            { icon: 'target', title: 'The draw', text: 'Tickets below the round\'s target win. The target adjusts like Bitcoin\'s difficulty, so the network mines the planned amount however many phones join.' },
-            { icon: 'q', title: 'Win 1 $Q', text: 'Anyone can check a win from public data alone. The $Q is credited to the phone owner\'s account.' },
+            { icon: 'mobile', title: 'Stay online', text: 'The Palm node app sends a signed heartbeat every 5 minutes from the phone.' },
+            { icon: 'stamp', title: 'Checked all day', text: 'Each heartbeat is checked against the node\'s own hardware key, so no one can answer for it.' },
+            { icon: 'clock', title: 'The day closes', text: 'At the end of the day the network counts which nodes stayed online.' },
+            { icon: 'q', title: '1 $Q credited', text: 'Every node that stayed online receives one $Q. Anyone can check it from public data.' },
           ],
         },
       ],
     },
     {
-      id: 'round', nav: 'One round', tint: true,
+      id: 'day', nav: 'One day', tint: true,
       blocks: [
-        { type: 'head', eyebrow: 'One round', title: 'From random number to **$Q**' },
-        { type: 'raw', html: roundDiagram },
+        { type: 'head', eyebrow: 'One day', title: 'From a day online to **$Q**' },
+        { type: 'raw', html: dayDiagram },
       ],
     },
     {
-      id: 'who', nav: 'Who can win',
+      id: 'who', nav: 'Who mines',
       blocks: [
-        { type: 'head', eyebrow: 'Who can win', title: 'Four checks, **every round**',
-          lede: 'A phone is in the draw only when all four hold. Uptime is the easiest thing to fake, so each ticket has to cost one real phone, one licence and one person.' },
+        { type: 'head', eyebrow: 'Who mines', title: 'Three checks, **every day**',
+          lede: 'A node mines its $Q for the day only when all three hold. Uptime is the easiest thing to fake, so each day has to be proven by one real phone running one licensed node.' },
         {
-          type: 'checks', cols: 2,
+          type: 'checks', cols: 3,
           items: [
-            { icon: 'badge', title: 'A node licence', text: 'The phone joined with an invite or licence signed by the network key.' },
+            { icon: 'badge', title: 'A Palm node licence', text: 'The phone joined with an invite or licence signed by the network key.' },
             { icon: 'fingerprint', title: 'A real phone', text: 'Its key lives in the phone\'s security chip, proven by Android Key Attestation. Emulators and servers cannot fake that proof.' },
-            { icon: 'clock', title: 'Online for the last day', text: 'A heartbeat in every 5 minute slot for 24 hours, with up to 10 minutes of grace for a network blip.' },
-            { icon: 'user', title: 'One per person', text: 'Each person mines with a capped number of phones. Extra phones earn nothing more.' },
-          ],
-        },
-      ],
-    },
-    {
-      id: 'fair', nav: 'A fair draw', tint: 'panel',
-      blocks: [
-        { type: 'head', eyebrow: 'A fair draw', title: 'Nobody can rig the **random number**' },
-        { type: 'quote', narrow: true, cite: 'How the draw works',
-          text: 'Think of a raffle where every ticket was printed the day before, and the winning number is drawn by many independent referees who each sign it. Nobody can change a ticket, and nobody can pick the number.' },
-        {
-          type: 'features', cards: true, cols: 4,
-          items: [
-            { icon: 'users', title: 'Made by many, not one', text: 'The number comes from drand, run by the independent operators of the League of Entropy. None of them knows it in advance or can set it alone.' },
-            { icon: 'shieldCheck', title: 'Signed and checked', text: 'Each number is signed. The app holds drand\'s public key and refuses any number whose signature does not check out.' },
-            { icon: 'lock', title: 'Everything fixed first', text: 'Phone keys, who is eligible and the target are all settled before the number exists, so nothing can be adjusted after seeing it.' },
-            { icon: 'shield', title: 'No backdoor', text: 'If drand ever stopped, mining would simply pause. It never switches to a number a person picks.' },
-          ],
-        },
-      ],
-    },
-    {
-      id: 'work', nav: 'Two tickets',
-      blocks: [
-        { type: 'head', eyebrow: 'Two kinds of contribution', title: 'Doing the work earns a **second ticket**',
-          lede: 'Proof of Contribution counts two things. Uptime earns a phone its first ticket. A phone that answers 95% or more of the signing work it is asked for over 7 days gets one extra ticket each round. Never more than two.' },
-        {
-          type: 'cards', cols: 2,
-          items: [
-            { icon: 'check', title: 'Counts', list: ['Answering a signing round on time', 'Correctly refusing a bad request', 'Helping make a new vault\'s key', 'Later: vouching for fellow nodes\' heartbeats'] },
-            { icon: 'scale', title: 'Never counts', list: ['Approving a payment. A node paid per signature would be paid to say yes, the opposite of what keeps vaults safe.', 'A refusal of a bad request scores exactly the same as a signature on a good one.'] },
+            { icon: 'clock', title: 'Online for the day', text: 'A heartbeat in every 5 minute slot of the day, with up to 10 minutes of grace for a network blip.' },
           ],
         },
       ],
@@ -330,32 +282,23 @@ export const mining = {
     {
       id: 'supply', nav: 'Supply', tint: true,
       blocks: [
-        { type: 'head', eyebrow: 'Supply', title: 'Built like **Bitcoin**',
-          lede: '$Q follows Bitcoin\'s schedule. The $Q mined per round halves every 210,000 rounds, about every 4 years. The first era mines half of all $Q, each era after it half of the one before, approaching 50,000,000 and never passing it.' },
+        { type: 'head', eyebrow: 'Supply', title: 'Ten years, **73 million $Q**',
+          lede: '20,000 Palm nodes × 365 days × 10 years = 73,000,000 $Q. That is the most there can ever be: fewer nodes online means fewer $Q. Each year the treasury, funded by half of every Palm fee, buys back 7.3 million $Q and burns it, the same as the most that can be mined in a year.' },
         {
           type: 'stats',
           items: [
-            { value: '50,000,000', key: '$Q ever', note: 'a fixed cap' },
-            { value: '10 minutes', key: 'per round', note: 'like a Bitcoin block' },
-            { value: '4 years', key: 'between halvings', note: 'every 210,000 rounds' },
-            { value: '1,000', key: 'nodes to start', note: 'before the first round runs' },
+            { value: '73,000,000', key: '$Q at most', note: 'over ten years' },
+            { value: '7,300,000', key: '$Q a year at most', note: '20,000 nodes × 365 days' },
+            { value: '3,650', key: '$Q for one node', note: 'online every day for ten years' },
+            { value: '7,300,000', key: '$Q burnt a year', note: 'bought back by the treasury' },
           ],
         },
         { type: 'raw', html: supplyChart },
         {
-          type: 'table', label: 'The eras',
-          head: ['Era', 'Years', 'Mined in the era', 'Total mined', 'Winners per round'],
-          rows: [
-            ['1', '0 to 4', '25,000,000', '25,000,000 (50%)', 'about 119'],
-            ['2', '4 to 8', '12,500,000', '37,500,000 (75%)', 'about 60'],
-            ['3', '8 to 12', '6,250,000', '43,750,000 (87.5%)', 'about 30'],
-            ['4', '12 to 16', '3,125,000', '46,875,000 (94%)', 'about 15'],
-            ['5', '16 to 20', '1,562,500', '48,437,500 (97%)', 'about 7'],
-            ['6', '20 to 24', '781,250', '49,218,750 (98.4%)', 'about 4'],
-            ['10', '36 to 40', '48,828', '49,951,172 (99.9%)', 'about 0.2'],
-          ],
+          type: 'table', label: 'Year by year, all 20,000 Palm nodes online',
+          head: ['Year', 'Mined that year', 'Mined in total', 'Bought back and burnt that year'],
+          rows: Array.from({ length: 10 }, (_, i) => [String(i + 1), '7,300,000', ((i + 1) * 7300000).toLocaleString('en-US'), '7,300,000']),
         },
-        { type: 'text', body: ['Mining starts only once **1,000 licensed nodes** are online, so the richest first era is shared widely instead of going to a handful of early phones.'] },
       ],
     },
   ],

@@ -53,7 +53,7 @@ const FOOTER = `<footer class="site-foot" data-track>
         </a>
         <div>
           <p class="d4">Mined by staying online.</p>
-          <p class="small mt-1">Every licensed phone that keeps the QuFi node network running gets a fair chance at $Q every 10 minutes.</p>
+          <p class="small mt-1">Every Palm node that stays online for a day receives one $Q, for ten years: at most 73 million $Q.</p>
           <p class="small mt-1">Planned design, November 2026. Details may change before launch. $Q cannot be transferred at launch; any change to that needs legal review in each launch country first. Figures describe the planned schedule, not a promise of any reward.</p>
         </div>
       </div>
